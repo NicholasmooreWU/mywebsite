@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nicholas Moore - Computer Science & Data Science Student</title>
+  <title>Nicholas Moore - Data Analyst & Engineer</title>
   <style>
     * {
       margin: 0;
@@ -63,27 +63,66 @@
       margin-bottom: 1rem;
       text-align: justify;
     }
+    
+    /* PROJECT STYLES */
     .project {
-      margin-bottom: 1.5rem;
-      padding: 1rem;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
       background-color: #ecf0f1;
       border-radius: 5px;
-      border-left: 4px solid #3498db;
+      border-left: 5px solid #3498db;
     }
     .project h3 {
       color: #2c3e50;
       margin-bottom: 0.5rem;
+      font-size: 1.4rem;
     }
+    .project-highlight {
+      font-weight: 700;
+      color: #2980b9;
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.2rem;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+    
+    /* NEW CODE SNIPPET STYLES */
+    .code-block {
+      background-color: #1e1e1e; /* Dark VS Code Theme */
+      color: #d4d4d4;
+      padding: 1rem;
+      border-radius: 6px;
+      margin: 1rem 0;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      border: 1px solid #333;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    }
+    /* Syntax highlighting simulation */
+    .code-keyword { color: #569cd6; } /* Blue for SQL keywords */
+    .code-func { color: #dcdcaa; } /* Yellow for functions */
+    .code-comment { color: #6a9955; } /* Green for comments */
+
     .project-link {
       display: inline-block;
-      margin-top: 0.5rem;
+      margin-top: 1rem;
       color: #3498db;
       text-decoration: none;
       font-weight: bold;
+      border: 1px solid #3498db;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
     }
     .project-link:hover {
-      text-decoration: underline;
+      background-color: #3498db;
+      color: white;
+      text-decoration: none;
     }
+
     footer {
       background-color: #2c3e50;
       color: white;
@@ -120,7 +159,7 @@
   <nav>
     <ul>
       <li><a href="#home">Home</a></li>
-      <li><a href="#about me">About Me</a></li>
+      <li><a href="#about-me">About Me</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -128,88 +167,158 @@
 
   <section id="home">
     <h1>Nicholas Moore</h1>
-    <p>Computer Science & Data Science Student | Willamette University</p>
-    <p>Welcome to my portfolio. I am a motivated student seeking entry-level opportunities in data science and software development. This website showcases my academic projects, technical skills, and passion for leveraging data to solve real-world problems.</p>
+    <p><strong>Data Analyst & Engineer | Willamette University</strong></p>
+    <p>Welcome to my portfolio. I specialize in building data warehouses, designing scalable SQL architectures, and engineering pipelines that transform raw data into actionable business intelligence.</p>
   </section>
 
-  <section id="about me">
+  <section id="about-me">
     <h2>About Me</h2>
-    <p>I am a Computer Science and Data Science double major at Willamette University in Salem, Oregon, with a strong foundation in data analysis, cryptography, and software development. My academic coursework and hands-on projects have equipped me with practical experience in transforming raw data into actionable insights.</p>
-    <p>I am particularly passionate about sports analytics, where I apply statistical methods and machine learning techniques to identify performance trends and optimize decision-making for athletes and teams. My technical skill set includes proficiency in SQL, Python, and R, along with experience in data visualization, database management, and secure coding practices.</p>
-    <p>I am actively seeking internship and entry-level opportunities in data science, software engineering, or analytics roles where I can contribute to data-driven projects and continue expanding my technical expertise. I thrive in collaborative environments and am eager to apply my skills to solve complex business challenges.</p>
+    <p>I am a Computer Science and Data Science double major at Willamette University, expected to graduate in May 2026. Unlike a traditional analyst who only interprets data, I have the engineering background to build the systems that collect and store it.</p>
+    <p>My technical focus lies in <strong>Database Architecture</strong> and <strong>Systems Programming</strong>. I have experience handling massive datasets (30M+ rows), optimizing query performance using advanced SQL techniques, and writing low-level system tools in Rust. I thrive in environments where I can bridge the gap between complex data engineering challenges and strategic business decisions.</p>
     <div class="skills">
-      <span class="skill-tag">Python</span>
-      <span class="skill-tag">SQL</span>
+      <span class="skill-tag">Python (Pandas/NumPy)</span>
+      <span class="skill-tag">Advanced SQL</span>
+      <span class="skill-tag">Database Design</span>
       <span class="skill-tag">R</span>
-      <span class="skill-tag">Data Analysis</span>
-      <span class="skill-tag">Pandas</span>
-      <span class="skill-tag">Cryptography</span>
-      <span class="skill-tag">Database Management</span>
-      <span class="skill-tag">Sports Analytics</span>
+      <span class="skill-tag">Rust</span>
+      <span class="skill-tag">API Integration</span>
+      <span class="skill-tag">Data Visualization</span>
     </div>
   </section>
 
   <section id="projects">
-    <h2>Projects</h2>
+    <h2>Technical Projects</h2>
     
     <div class="project">
-    <h3>Image Steganography & Encrypted Data Encoding</h3>
-    <p>
-    Developed a Python-based steganography system to explore how encrypted data can be
-    transformed, encoded, embedded, and recovered within image files using Least
-    Significant Bit (LSB) manipulation. The project focuses on secure data handling
-    concepts, binary encoding pipelines, and integrity validation rather than
-    production-ready encryption.
-    </p>
-    <p>
-    Implemented ChaCha20 encryption with password-based key derivation (PBKDF2) to
-    encrypt messages prior to embedding, followed by binary conversion and pixel-level
-    image modification using the Pillow (PIL) library. The system supports full
-    message recovery and verification to validate correctness.
-    </p>
-    <p><strong>Technologies:</strong> Python, Pillow (PIL), ChaCha20, Binary Encoding, Data Validation</p>
-    <a href="https://github.com/NicholasmooreWU/steganography" class="project-link" target="_blank">View on GitHub →</a>
-  </div>
+      <h3>Stock Market Data Analysis Engine</h3>
+      
+      <span class="project-highlight">The Challenge</span>
+      <p>
+        Extracting actionable insights from a massive financial dataset containing <strong>34 million+ rows</strong> and 4,500 columns. 
+        The sheer volume of data required advanced SQL techniques to avoid timeout errors and generate timely reports.
+      </p>
 
-    <div class="project">
-      <h3>Stock Market Data Management System</h3>
-      <p>Collaborated with a team to design and implement a comprehensive SQL database system that consolidates multiple stock market data sources into a unified table structure. Performed data cleaning, normalization, and format standardization to enable efficient querying and trend analysis across historical market data.</p>
-      <p><strong>Technologies:</strong> SQL, Database Design, Data Integration, Data Analysis</p>
+      <span class="project-highlight">The Solution</span>
+      <p>
+        Developed a suite of optimized SQL queries using <strong>Common Table Expressions (CTEs)</strong> and <strong>Window Functions</strong>. 
+        This approach moved the computational load to the database engine, allowing for efficient calculation of complex metrics like 
+        day-over-day volatility directly within the SQL layer without external processing.
+      </p>
+
+      <span class="project-highlight">Key SQL Implementation</span>
+      <div class="code-block">
+<pre>
+<span class="code-comment">/* Optimized volatility calculation using Window Functions */</span>
+<span class="code-keyword">WITH</span> stock_changes <span class="code-keyword">AS</span> (
+  <span class="code-keyword">SELECT</span> 
+    date, ticker, close,
+    <span class="code-comment">/* LAG() accesses previous row data without a self-join for O(n) efficiency */</span>
+    <span class="code-func">LAG</span>(close) <span class="code-keyword">OVER</span> (<span class="code-keyword">PARTITION BY</span> ticker <span class="code-keyword">ORDER BY</span> date) <span class="code-keyword">AS</span> prev_close,
+    <span class="code-func">LAG</span>(searches) <span class="code-keyword">OVER</span> (<span class="code-keyword">PARTITION BY</span> ticker <span class="code-keyword">ORDER BY</span> date) <span class="code-keyword">AS</span> prev_searches
+  <span class="code-keyword">FROM</span> stock_data
+)
+<span class="code-keyword">SELECT</span> 
+  ticker, 
+  <span class="code-func">AVG</span>(close - prev_close) <span class="code-keyword">AS</span> avg_daily_volatility
+<span class="code-keyword">FROM</span> stock_changes
+<span class="code-keyword">WHERE</span> prev_searches > 50
+<span class="code-keyword">GROUP BY</span> ticker
+<span class="code-keyword">ORDER BY</span> avg_daily_volatility <span class="code-keyword">DESC</span>;
+</pre>
+      </div>
+
+      <p><strong>Technologies:</strong> SQL (PostgreSQL), Window Functions, Query Optimization, Python</p>
       <a href="https://github.com/NicholasmooreWU/database-project" class="project-link" target="_blank">View on GitHub →</a>
     </div>
 
     <div class="project">
-      <h3>Soccer Performance Analytics</h3>
-      <p>Conducted statistical analysis of ESPN soccer event data to identify key performance indicators that correlate with winning outcomes. Utilized Python and Pandas for data cleaning, exploratory data analysis, and visualization to extract actionable insights for improving team strategy and player performance.</p>
-      <p><strong>Technologies:</strong> Python, Pandas, Data Visualization, Statistical Analysis, Sports Analytics</p>
-      <a href="https://docs.google.com/presentation/d/1wKXTAAp3v-li1Y3glPJTHkFJJfPD9OHmstSC_z0AnLg/edit?slide=id.p#slide=id.p" class="project-link" target="_blank">View presentation →</a>
-    </div>
+      <h3>League of Legends Algorithmic Performance Engine</h3>
+      
+      <span class="project-highlight">The Challenge</span>
+      <p>
+        Raw match data provides statistics (Kills, Deaths, CS) but lacks context on player "Playstyle." 
+        The goal was to algorithmically classify players into archetypes and determine if recent performance improvements were statistically significant.
+      </p>
 
-    <div class="project">
-      <h3>Blockchain & Cryptocurrency Implementation</h3>
-      <p>Developed a functional blockchain system from scratch to understand the fundamental principles of distributed ledger technology and cryptocurrency. Implemented core blockchain features including block creation, proof-of-work mining, transaction validation, and chain integrity verification using cryptographic hashing algorithms.</p>
-      <p><strong>Technologies:</strong> Python, Blockchain, Cryptography, Hash Functions, Distributed Systems</p>
-      <a href="https://github.com/NicholasmooreWU/Crypto" class="project-link" target="_blank">View on GitHub →</a>
-    </div>
+      <span class="project-highlight">The Solution</span>
+      <p>
+        Built a Flask API that ingests match data via <strong>concurrent threading</strong> (ThreadPoolExecutor).
+        Implemented <strong>Unsupervised Machine Learning (K-Means Clustering)</strong> to group players based on feature vectors normalized by game duration.
+        Created a custom scoring algorithm to map mathematical cluster centroids to human-readable archetypes like "Aggressive" or "Vision-Control".
+      </p>
 
-    <div class="project">
-      <h3>League of Legends Performance Insights</h3>
-      <p>Built a comprehensive data analytics application to analyze League of Legends gameplay statistics and player performance metrics. Integrated with the Riot Games API to extract match data and developed visualization dashboards to identify trends, champion win rates, and strategic insights for competitive gameplay improvement.</p>
-      <p><strong>Technologies:</strong> Python, API Integration, Data Visualization, Game Analytics, Statistical Analysis</p>
+      <span class="project-highlight">Key ML Implementation</span>
+      <div class="code-block">
+<pre>
+<span class="code-keyword">def</span> <span class="code-func">calculate_playstyle_clustering</span>(matches):
+    <span class="code-string">"""Use K-means clustering to identify player playstyle based on stats patterns"""</span>
+    
+    <span class="code-comment"># 1. Feature Engineering: Normalize stats by game duration</span>
+    features = []
+    <span class="code-keyword">for</span> match <span class="code-keyword">in</span> matches:
+        duration = match[<span class="code-string">'game_duration'</span>] / <span class="code-string">60</span>
+        features.append([
+            match[<span class="code-string">'damage'</span>] / duration,  <span class="code-comment"># Damage per minute</span>
+            match[<span class="code-string">'cs'</span>] / duration,      <span class="code-comment"># CS per minute</span>
+            match[<span class="code-string">'vision'</span>] / duration,  <span class="code-comment"># Vision per minute</span>
+            match[<span class="code-string">'kda'</span>],
+            (match[<span class="code-string">'kills'</span>] + match[<span class="code-string">'assists'</span>]) / <span class="code-func">max</span>(duration, <span class="code-string">1</span>) <span class="code-comment"># KP Rate</span>
+        ])
+
+    <span class="code-comment"># 2. Normalize & Cluster</span>
+    scaler = StandardScaler()
+    features_scaled = scaler.fit_transform(np.array(features))
+    
+    kmeans = <span class="code-class">KMeans</span>(n_clusters=<span class="code-string">4</span>, random_state=<span class="code-string">42</span>)
+    cluster_labels = kmeans.fit_predict(features_scaled)
+
+    <span class="code-comment"># 3. Domain Logic: Map mathematical centroids to human archetypes</span>
+    <span class="code-keyword">for</span> center <span class="code-keyword">in</span> scaler.inverse_transform(kmeans.cluster_centers_):
+        dmg_pm, cs_pm, vis_pm, kda, kp = center
+        
+        <span class="code-comment"># Score centroids to define the Playstyle</span>
+        scores = {
+            <span class="code-string">'Aggressive'</span>: dmg_pm * <span class="code-string">0.4</span> + kp * <span class="code-string">0.6</span>,
+            <span class="code-string">'Farming-Focused'</span>: cs_pm * <span class="code-string">0.7</span> - (dmg_pm / max_dmg) * <span class="code-string">0.3</span>,
+            <span class="code-string">'Vision-Control'</span>: vis_pm * <span class="code-string">0.8</span> + (<span class="code-string">1</span> - dmg_pm / max_dmg) * <span class="code-string">0.2</span>,
+            <span class="code-string">'Team-Fighter'</span>: kda * <span class="code-string">0.4</span> + (cs_pm / max_cs) * <span class="code-string">0.3</span>
+        }
+    <span class="code-keyword">return</span> assign_dominant_playstyle(scores)
+</pre>
+      </div>
+
+      <p><strong>Technologies:</strong> Python, Scikit-Learn (KMeans), SciPy (Stats), Flask, Threading, Pandas</p>
       <a href="https://github.com/NicholasmooreWU/lol-insights" class="project-link" target="_blank">View on GitHub →</a>
     </div>
 
     <div class="project">
-      <h3>Source Control Management System in Rust</h3>
-      <p>Implemented a custom version control system using Rust to understand the core principles behind Git and modern SCM tools. Developed key features including repository initialization, file staging, commit operations, and version history tracking, while leveraging Rust's memory safety and performance characteristics for efficient file system operations.</p>
-      <p><strong>Technologies:</strong> Rust, File Systems, Version Control, Systems Programming, Git Internals</p>
+      <h3>Source Control System (Rust Implementation)</h3>
+      <span class="project-highlight">Overview</span>
+      <p>
+        Built a custom version control system from scratch in Rust to replicate core Git functionality. 
+        Implemented low-level file system operations including hashing, staging, and commit history tracking. 
+        Demonstrates strong understanding of systems programming, memory safety, and binary data encoding.
+      </p>
+      <p><strong>Technologies:</strong> Rust, Systems Programming, File I/O, Hashing Algorithms</p>
       <a href="https://github.com/NicholasmooreWU/271rs" class="project-link" target="_blank">View on GitHub →</a>
     </div>
+
+    <div class="project">
+      <h3>Soccer Match Predictive Analysis</h3>
+      <span class="project-highlight">Overview</span>
+      <p>
+        Conducted statistical analysis of ESPN soccer event data to identify Key Performance Indicators (KPIs) correlating with winning outcomes. 
+        Utilized Python and Pandas for data cleaning, exploratory data analysis (EDA), and visualization to extract actionable insights for team strategy.
+      </p>
+      <p><strong>Technologies:</strong> Python, Pandas, Matplotlib, Statistical Modeling</p>
+      <a href="https://docs.google.com/presentation/d/1wKXTAAp3v-li1Y3glPJTHkFJJfPD9OHmstSC_z0AnLg/edit" class="project-link" target="_blank">View Presentation →</a>
+    </div>
+
   </section>
 
   <section id="contact">
     <h2>Contact</h2>
-    <p class="contact-info">I am actively seeking internship and entry-level opportunities. Please feel free to reach out!</p>
+    <p class="contact-info">I am actively seeking internship and entry-level opportunities in Data Analytics and Data Engineering. Please feel free to reach out!</p>
     <p class="contact-info"><strong>Email:</strong> <a href="mailto:nomoore@willamette.edu">nomoore@willamette.edu</a></p>
     <p class="contact-info"><strong>GitHub:</strong> <a href="https://github.com/NicholasmooreWU" target="_blank">github.com/NicholasmooreWU</a></p>
     <p class="contact-info"><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/nicholas-o-moore/" target="_blank">linkedin.com/in/nicholas-o-moore/</a></p>
