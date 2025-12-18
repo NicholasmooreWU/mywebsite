@@ -104,7 +104,7 @@
     /* Syntax highlighting simulation */
     .code-keyword { color: #569cd6; } /* Blue for SQL keywords */
     .code-func { color: #dcdcaa; } /* Yellow for functions */
-    .code-comment { color: #6a9955; } /* Green for comments */
+    .code-comment { color: #8cd65e; } /* UPDATED: Brighter Green for readability */
 
     .project-link {
       display: inline-block;
@@ -173,7 +173,7 @@
 
   <section id="about-me">
     <h2>About Me</h2>
-    <p>I am a Computer Science and Data Science double major at Willamette University, expected to graduate in May 2026. Unlike a traditional analyst who only interprets data, I have the engineering background to build the systems that collect and store it.</p>
+    <p>I am a U.S. Citizen (Clearance Eligible) and Computer Science/Data Science double major at Willamette University, expected to graduate in May 2026. Unlike a traditional analyst who only interprets data, I have the engineering background to build the systems that collect and store it.</p>
     <p>My technical focus lies in <strong>Database Architecture</strong> and <strong>Systems Programming</strong>. I have experience handling massive datasets (30M+ rows), optimizing query performance using advanced SQL techniques, and writing low-level system tools in Rust. I thrive in environments where I can bridge the gap between complex data engineering challenges and strategic business decisions.</p>
     <div class="skills">
       <span class="skill-tag">Python (Pandas/NumPy)</span>
@@ -201,8 +201,7 @@
       <span class="project-highlight">The Solution</span>
       <p>
         Developed a suite of optimized SQL queries using <strong>Common Table Expressions (CTEs)</strong> and <strong>Window Functions</strong>. 
-        This approach moved the computational load to the database engine, allowing for efficient calculation of complex metrics like 
-        day-over-day volatility directly within the SQL layer without external processing.
+        Implemented <strong>database indexing strategies</strong> to reduce query lookup times on high-volume search fields, allowing for efficient calculation of complex metrics directly within the SQL layer.
       </p>
 
       <span class="project-highlight">Key SQL Implementation</span>
@@ -242,7 +241,7 @@
 
       <span class="project-highlight">The Solution</span>
       <p>
-        Built a Flask API that ingests match data via <strong>concurrent threading</strong> (ThreadPoolExecutor).
+        Built a Flask API that utilizes <strong>concurrent threading</strong> (ThreadPoolExecutor) to ingest <strong>unstructured JSON data</strong> from the Riot Games API into structured SQL tables.
         Implemented <strong>Unsupervised Machine Learning (K-Means Clustering)</strong> to group players based on feature vectors normalized by game duration.
         Created a custom scoring algorithm to map mathematical cluster centroids to human-readable archetypes like "Aggressive" or "Vision-Control".
       </p>
