@@ -88,7 +88,7 @@
       letter-spacing: 0.5px;
     }
     
-    /* NEW CODE SNIPPET STYLES */
+    /* CODE SNIPPET STYLES */
     .code-block {
       background-color: #1e1e1e; /* Dark VS Code Theme */
       color: #d4d4d4;
@@ -102,9 +102,13 @@
       box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
     }
     /* Syntax highlighting simulation */
-    .code-keyword { color: #569cd6; } /* Blue for SQL keywords */
-    .code-func { color: #dcdcaa; } /* Yellow for functions */
-    .code-comment { color: #8cd65e; } /* UPDATED: Brighter Green for readability */
+    .code-keyword { color: #569cd6; } 
+    .code-func { color: #dcdcaa; } 
+    .code-comment { color: #6a9955; }
+    .code-type { color: #4ec9b0; }
+    .code-string { color: #ce9178; }
+    .code-class { color: #4ec9b0; }
+    .code-macro { color: #c586c0; }
 
     .project-link {
       display: inline-block;
@@ -263,25 +267,13 @@
             match[<span class="code-string">'kda'</span>],
             (match[<span class="code-string">'kills'</span>] + match[<span class="code-string">'assists'</span>]) / <span class="code-func">max</span>(duration, <span class="code-string">1</span>) <span class="code-comment"># KP Rate</span>
         ])
-
+    
     <span class="code-comment"># 2. Normalize & Cluster</span>
     scaler = StandardScaler()
     features_scaled = scaler.fit_transform(np.array(features))
     
     kmeans = <span class="code-class">KMeans</span>(n_clusters=<span class="code-string">4</span>, random_state=<span class="code-string">42</span>)
     cluster_labels = kmeans.fit_predict(features_scaled)
-
-    <span class="code-comment"># 3. Domain Logic: Map mathematical centroids to human archetypes</span>
-    <span class="code-keyword">for</span> center <span class="code-keyword">in</span> scaler.inverse_transform(kmeans.cluster_centers_):
-        dmg_pm, cs_pm, vis_pm, kda, kp = center
-        
-        <span class="code-comment"># Score centroids to define the Playstyle</span>
-        scores = {
-            <span class="code-string">'Aggressive'</span>: dmg_pm * <span class="code-string">0.4</span> + kp * <span class="code-string">0.6</span>,
-            <span class="code-string">'Farming-Focused'</span>: cs_pm * <span class="code-string">0.7</span> - (dmg_pm / max_dmg) * <span class="code-string">0.3</span>,
-            <span class="code-string">'Vision-Control'</span>: vis_pm * <span class="code-string">0.8</span> + (<span class="code-string">1</span> - dmg_pm / max_dmg) * <span class="code-string">0.2</span>,
-            <span class="code-string">'Team-Fighter'</span>: kda * <span class="code-string">0.4</span> + (cs_pm / max_cs) * <span class="code-string">0.3</span>
-        }
     <span class="code-keyword">return</span> assign_dominant_playstyle(scores)
 </pre>
       </div>
@@ -291,14 +283,69 @@
     </div>
 
     <div class="project">
-      <h3>Source Control System (Rust Implementation)</h3>
-      <span class="project-highlight">Overview</span>
+      <h3>Simple SCM (Rust Implementation)</h3>
+      <span class="project-highlight">The Challenge</span>
       <p>
-        Built a custom version control system from scratch in Rust to replicate core Git functionality. 
-        Implemented low-level file system operations including hashing, staging, and commit history tracking. 
-        Demonstrates strong understanding of systems programming, memory safety, and binary data encoding.
+        Building a minimal, content-addressed Version Control System (VCS) from scratch in Rust.
+        The goal was to replicate core Git functionality—including repository initialization, staging, and commit history—using only standard libraries and cryptographic hashing for data integrity.
       </p>
-      <p><strong>Technologies:</strong> Rust, Systems Programming, File I/O, Hashing Algorithms</p>
+
+      <span class="project-highlight">The Solution</span>
+      <p>
+        Architected <code>scm</code>, a Rust binary that manages file snapshots using a Merkle-like tree structure.
+        Implemented <strong>SHA-256 hashing</strong> to generate unique IDs for every file blob and commit object, ensuring data integrity.
+        Designed the system to serialize metadata into JSON and store objects on disk, enabling features like `commit`, `log`, and `revert` (rolling back to previous states).
+      </p>
+
+      <span class="project-highlight">Key Systems Implementation</span>
+      <div class="code-block">
+<pre>
+<span class="code-keyword">use</span> serde::{Deserialize, Serialize};
+<span class="code-keyword">use</span> sha2::{Digest, Sha256};
+<span class="code-keyword">use</span> std::collections::BTreeMap;
+
+<span class="code-comment">/// Content-addressable commit structure</span>
+<span class="code-macro">#[derive(Serialize, Deserialize, Debug)]</span>
+<span class="code-keyword">struct</span> <span class="code-type">Commit</span> {
+    tree: <span class="code-type">BTreeMap</span>&lt;<span class="code-type">String</span>, <span class="code-type">String</span>&gt;, <span class="code-comment">// Maps filenames to SHA-256 hashes</span>
+    parent: <span class="code-type">Option</span>&lt;<span class="code-type">String</span>&gt;,         <span class="code-comment">// Parent commit hash</span>
+    message: <span class="code-type">String</span>,
+    timestamp: <span class="code-type">DateTime</span>&lt;<span class="code-type">Utc</span>&gt;,
+}
+
+<span class="code-keyword">fn</span> <span class="code-func">cmd_commit</span>(message: &<span class="code-type">str</span>) -> <span class="code-type">Result</span>&lt;()&gt; {
+    <span class="code-keyword">let</span> repo = repo_root()?;
+    <span class="code-keyword">let</span> index = load_index(&repo)?;
+    
+    <span class="code-keyword">let</span> <span class="code-keyword">mut</span> tree = <span class="code-type">BTreeMap</span>::new();
+    <span class="code-keyword">for</span> rel <span class="code-keyword">in</span> &index {
+        <span class="code-keyword">let</span> path = repo.join(rel);
+        <span class="code-keyword">let</span> <span class="code-keyword">mut</span> f = <span class="code-type">fs</span>::<span class="code-type">File</span>::open(&path)?;
+        <span class="code-keyword">let</span> <span class="code-keyword">mut</span> bytes = vec![];
+        f.read_to_end(&<span class="code-keyword">mut</span> bytes)?;
+        
+        <span class="code-comment">// Store blob via SHA-256 hash</span>
+        <span class="code-keyword">let</span> blob_hash = store_blob(&repo, &bytes)?; 
+        tree.insert(rel.clone(), blob_hash);
+    }
+
+    <span class="code-keyword">let</span> commit = <span class="code-type">Commit</span> {
+        tree,
+        parent: read_head(&repo)?,
+        message: message.to_string(),
+        timestamp: <span class="code-type">Utc</span>::now(),
+    };
+    
+    <span class="code-comment">// Serialize commit and update HEAD</span>
+    <span class="code-keyword">let</span> commit_hash = commit_object_hash(&commit)?;
+    write_head(&repo, &commit_hash)?;
+    <span class="code-type">println!</span>(<span class="code-string">"Committed: {}"</span>, commit_hash);
+    <span class="code-type">Ok</span>(())
+}
+</pre>
+      </div>
+
+      <p><strong>Technologies:</strong> Rust, SHA-256 Hashing, Serde (JSON), File I/O, CLI Design</p>
       <a href="https://github.com/NicholasmooreWU/271rs" class="project-link" target="_blank">View on GitHub →</a>
     </div>
 
@@ -311,6 +358,67 @@
       </p>
       <p><strong>Technologies:</strong> Python, Pandas, Matplotlib, Statistical Modeling</p>
       <a href="https://docs.google.com/presentation/d/1wKXTAAp3v-li1Y3glPJTHkFJJfPD9OHmstSC_z0AnLg/edit" class="project-link" target="_blank">View Presentation →</a>
+    </div>
+
+    <div class="project">
+      <h3>Secure Image Steganography Tool</h3>
+      <span class="project-highlight">Overview</span>
+      <p>
+        Engineered a secure Python tool utilizing <strong>ChaCha20 encryption</strong> and <strong>Least Significant Bit (LSB) encoding</strong>. 
+        The system demonstrates low-level binary data manipulation by embedding encrypted payloads directly into image pixel data, ensuring secure and hidden communication.
+      </p>
+      
+      <span class="project-highlight">Key Security & Systems Implementation</span>
+      <div class="code-block">
+<pre>
+<span class="code-keyword">from</span> cryptography.hazmat.primitives.ciphers <span class="code-keyword">import</span> Cipher, algorithms
+<span class="code-keyword">from</span> PIL <span class="code-keyword">import</span> Image
+
+<span class="code-keyword">class</span> <span class="code-class">Encoder</span>:
+    <span class="code-keyword">def</span> <span class="code-func">text_encoder</span>(<span class="code-keyword">self</span>, text, key):
+        <span class="code-comment"># 1. Derive strong key using PBKDF2 & SHA256</span>
+        kdf = PBKDF2HMAC(
+            algorithm=hashes.SHA256(),
+            length=<span class="code-string">32</span>,
+            salt=salt,
+            iterations=<span class="code-string">100000</span>,
+            backend=default_backend()
+        )
+        
+        <span class="code-comment"># 2. Encrypt with ChaCha20 Stream Cipher</span>
+        algorithm = algorithms.ChaCha20(kdf.derive(key.encode()), nonce)
+        cipher = Cipher(algorithm, mode=<span class="code-keyword">None</span>, backend=default_backend())
+        <span class="code-keyword">return</span> cipher.encryptor().update(text.encode()) + encryptor.finalize()
+
+    <span class="code-keyword">def</span> <span class="code-func">alter_image</span>(<span class="code-keyword">self</span>, img, binary_message):
+        <span class="code-string">"""Embeds binary data into the LSB of each pixel's RGB channels"""</span>
+        pixels = img.load()
+        width, height = img.size
+        
+        <span class="code-keyword">for</span> y <span class="code-keyword">in</span> <span class="code-func">range</span>(height):
+            <span class="code-keyword">for</span> x <span class="code-keyword">in</span> <span class="code-func">range</span>(width):
+                r, g, b = pixels[x, y]
+                
+                <span class="code-comment"># Bitwise Op: Clear last bit (& ~1) and set new bit (| bit)</span>
+                <span class="code-keyword">if</span> data_index < <span class="code-func">len</span>(binary_message):
+                    r = (r & ~<span class="code-string">1</span>) | <span class="code-func">int</span>(binary_message[data_index])
+                    data_index += <span class="code-string">1</span>
+                
+                <span class="code-keyword">if</span> data_index < <span class="code-func">len</span>(binary_message):
+                    g = (g & ~<span class="code-string">1</span>) | <span class="code-func">int</span>(binary_message[data_index])
+                    data_index += <span class="code-string">1</span>
+
+                <span class="code-keyword">if</span> data_index < <span class="code-func">len</span>(binary_message):
+                    b = (b & ~<span class="code-string">1</span>) | <span class="code-func">int</span>(binary_message[data_index])
+                    data_index += <span class="code-string">1</span>
+                
+                pixels[x, y] = (r, g, b)
+        <span class="code-keyword">return</span> img
+</pre>
+      </div>
+
+      <p><strong>Technologies:</strong> Python, Cryptography (ChaCha20), Bitwise Operations, Pillow (PIL)</p>
+      <a href="http://github.com/NicholasmooreWU/steganography" class="project-link">View Source →</a>
     </div>
 
   </section>
