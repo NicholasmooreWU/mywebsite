@@ -373,6 +373,72 @@
     </div>
 
     <div class="project">
+      <h3>Packet Sniffer (Rust)</h3>
+      <span class="project-highlight">The Challenge</span>
+      <p>
+        Building a real-time network packet analyzer capable of capturing and decoding live network traffic at the data link layer.
+        The system needed to handle raw packet capture with minimal overhead while parsing multiple protocol layers (Ethernet, IP, TCP/UDP).
+      </p>
+
+      <span class="project-highlight">The Solution</span>
+      <p>
+        Developed a low-level packet sniffer in Rust using the <strong>pnet library</strong> for raw socket access and packet manipulation.
+        Implemented <strong>zero-copy packet parsing</strong> by directly interpreting binary data structures without deserialization overhead.
+        Created a multi-layer protocol decoder supporting <strong>IPv4/IPv6, TCP/UDP, ICMP, and ARP</strong> with real-time display of source/destination addresses, ports, and TCP flags.
+      </p>
+
+      <span class="project-highlight">Key Systems Implementation</span>
+      <div class="code-block">
+<pre>
+<span class="code-keyword">use</span> pnet::datalink;
+<span class="code-keyword">use</span> pnet::packet::ethernet::{EthernetPacket, EtherTypes};
+<span class="code-keyword">use</span> pnet::packet::tcp::{TcpPacket, TcpFlags};
+
+<span class="code-keyword">fn</span> <span class="code-func">main</span>() {
+    <span class="code-keyword">let</span> interfaces = datalink::interfaces();
+    <span class="code-keyword">let</span> interface = interfaces
+        .into_iter()
+        .find(|iface| iface.is_up() && !iface.is_loopback())
+        .expect(<span class="code-string">"No suitable network interface found"</span>);
+    
+    <span class="code-comment">// Create raw packet capture channel (requires root/admin privileges)</span>
+    <span class="code-keyword">let</span> (_, <span class="code-keyword">mut</span> rx) = <span class="code-keyword">match</span> datalink::channel(&interface, Default::default()) {
+        <span class="code-type">Ok</span>(datalink::Channel::Ethernet(tx, rx)) => (tx, rx),
+        <span class="code-type">Err</span>(e) => <span class="code-macro">panic!</span>(<span class="code-string">"Failed to create datalink channel: {}"</span>, e),
+    };
+    
+    <span class="code-comment">// Zero-copy packet parsing loop</span>
+    <span class="code-keyword">loop</span> {
+        <span class="code-keyword">match</span> rx.next() {
+            <span class="code-type">Ok</span>(packet) => {
+                <span class="code-keyword">if</span> <span class="code-keyword">let</span> <span class="code-type">Some</span>(ethernet) = EthernetPacket::new(packet) {
+                    handle_ethernet_packet(&ethernet);
+                }
+            }
+        }
+    }
+}
+
+<span class="code-keyword">fn</span> <span class="code-func">get_tcp_flags</span>(tcp: &TcpPacket) -> <span class="code-type">String</span> {
+    <span class="code-keyword">let</span> <span class="code-keyword">mut</span> flags = <span class="code-type">Vec</span>::new();
+    <span class="code-keyword">let</span> flag_bits = tcp.get_flags();
+    
+    <span class="code-comment">// Bitwise flag extraction for TCP handshake analysis</span>
+    <span class="code-keyword">if</span> flag_bits & TcpFlags::SYN != <span class="code-string">0</span> { flags.push(<span class="code-string">"SYN"</span>); }
+    <span class="code-keyword">if</span> flag_bits & TcpFlags::ACK != <span class="code-string">0</span> { flags.push(<span class="code-string">"ACK"</span>); }
+    <span class="code-keyword">if</span> flag_bits & TcpFlags::FIN != <span class="code-string">0</span> { flags.push(<span class="code-string">"FIN"</span>); }
+    
+    flags.join(<span class="code-string">","</span>)
+}
+</pre>
+      </div>
+
+      <p><strong>Technologies:</strong> Rust, pnet (Packet Manipulation), Raw Sockets, Binary Protocol Parsing, Systems Programming</p>
+      <p><strong>Key Features:</strong> Real-time packet capture, IPv4/IPv6 support, TCP flag analysis (SYN/ACK/FIN/RST), UDP port tracking, ARP detection, requires elevated privileges</p>
+      <a href="https://github.com/NicholasmooreWU/packet_sniffer" class="project-link" target="_blank">View on GitHub →</a>
+    </div>
+
+    <div class="project">
       <h3>Secure Image Steganography Tool</h3>
       <span class="project-highlight">Overview</span>
       <p>
