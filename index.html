@@ -235,20 +235,31 @@
     </div>
 
     <div class="project">
-      <h3>League of Legends Algorithmic Performance Engine</h3>
+      <h3>League of Legends Advanced Analytics Dashboard</h3>
       
       <span class="project-highlight">The Challenge</span>
       <p>
-        Raw match data provides statistics (Kills, Deaths, CS) but lacks context on player "Playstyle." 
-        The goal was to algorithmically classify players into archetypes and determine if recent performance improvements were statistically significant.
+        Raw match data provides statistics (Kills, Deaths, CS) but lacks context on player "Playstyle" and performance trends. 
+        The goal was to build a comprehensive analytics platform that combines machine learning, statistical analysis, and interactive visualizations to provide actionable insights for player improvement.
       </p>
 
       <span class="project-highlight">The Solution</span>
       <p>
-        Built a Flask API that utilizes <strong>concurrent threading</strong> (ThreadPoolExecutor) to ingest <strong>unstructured JSON data</strong> from the Riot Games API into structured SQL tables.
-        Implemented <strong>Unsupervised Machine Learning (K-Means Clustering)</strong> to group players based on feature vectors normalized by game duration.
-        Created a custom scoring algorithm to map mathematical cluster centroids to human-readable archetypes like "Aggressive" or "Vision-Control".
+        Developed a full-stack analytics platform with a <strong>Flask REST API backend</strong> and <strong>Streamlit dashboard frontend</strong>.
+        Implemented <strong>concurrent threading</strong> (ThreadPoolExecutor with 10 workers) to efficiently fetch and process 100+ matches from the Riot Games API with connection pooling and smart caching (10-minute TTL).
+        Built <strong>K-Means clustering algorithm</strong> to classify players into 4 playstyles (Aggressive, Farming-Focused, Vision-Control, Team-Fighter) using 5 normalized feature vectors.
+        Created <strong>time-series performance tracking</strong> with 7 & 14-game moving averages to identify trends in win rate and KDA.
+        Implemented <strong>statistical analysis module</strong> featuring Wilson score confidence intervals, two-proportion z-tests for role performance comparison, and variance analysis for consistency metrics.
       </p>
+
+      <span class="project-highlight">Key Features</span>
+      <ul class="feature-list">
+        <li><strong>Interactive Streamlit Dashboard:</strong> Real-time analysis with Plotly visualizations, champion recommendations by role, and performance trend analysis across multiple tabs</li>
+        <li><strong>Machine Learning Classification:</strong> Unsupervised learning to identify dominant playstyles with characteristic analysis for each cluster</li>
+        <li><strong>Statistical Significance Testing:</strong> Automated hypothesis testing to determine if performance differences between roles are statistically significant</li>
+        <li><strong>Data Export Capabilities:</strong> CSV export for Excel analysis and JSON export with complete metadata for Tableau/Power BI integration</li>
+        <li><strong>Performance Optimization:</strong> Smart caching system, retry logic with exponential backoff, and adaptive fetch sizing achieving <50ms response times for cached requests</li>
+      </ul>
 
       <span class="project-highlight">Key ML Implementation</span>
       <div class="code-block">
@@ -272,13 +283,14 @@
     scaler = StandardScaler()
     features_scaled = scaler.fit_transform(np.array(features))
     
-    kmeans = <span class="code-class">KMeans</span>(n_clusters=<span class="code-string">4</span>, random_state=<span class="code-string">42</span>)
+    kmeans = <span class="code-class">KMeans</span>(n_clusters=<span class="code-string">4</span>, random_state=<span class="code-string">42</span>, n_init=<span class="code-string">10</span>)
     cluster_labels = kmeans.fit_predict(features_scaled)
     <span class="code-keyword">return</span> assign_dominant_playstyle(scores)
 </pre>
       </div>
 
-      <p><strong>Technologies:</strong> Python, Scikit-Learn (KMeans), SciPy (Stats), Flask, Threading, Pandas</p>
+      <p><strong>Technologies:</strong> Python, Flask (REST API), Streamlit, Scikit-Learn (K-Means), SciPy (Statistical Tests), Plotly (Visualizations), Pandas (Time-Series), ThreadPoolExecutor (Concurrency)</p>
+      <p><strong>Performance:</strong> 15-30s first load (20 matches), <50ms cached requests, supports 10-100 match analysis with one-click launcher</p>
       <a href="https://github.com/NicholasmooreWU/lol-insights" class="project-link" target="_blank">View on GitHub →</a>
     </div>
 
