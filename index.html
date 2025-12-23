@@ -439,6 +439,93 @@
     </div>
 
     <div class="project">
+      <h3>GPS Interceptor - Aircraft Surveillance & Anomaly Detection System</h3>
+      
+      <span class="project-highlight">The Challenge</span>
+      <p>
+        Building a real-time aircraft tracking and threat detection system capable of monitoring live flight data, identifying impossible flight patterns (teleportation, supersonic speeds), and visualizing threats on an interactive dashboard. 
+        The system needed to integrate external APIs, persist data efficiently, detect anomalies through geospatial calculations, and provide continuous surveillance with automated refresh cycles.
+      </p>
+
+      <span class="project-highlight">The Solution</span>
+      <p>
+        Developed a full-stack surveillance platform that integrates the <strong>OpenSky Network API</strong> for real-time aircraft tracking within configurable geographic bounds.
+        Implemented <strong>SQLite database architecture</strong> with optimized schema design for storing 30-second interval flight data (position, velocity, heading, anomaly flags).
+        Built <strong>geospatial anomaly detection engine</strong> using the Haversine formula to calculate great-circle distances between consecutive positions and identify aircraft moving faster than 2000 km/h.
+        Created <strong>interactive Folium map dashboard</strong> with auto-zoom functionality, color-coded threat markers (red for anomalies, green for normal), and detailed popups displaying ICAO24 identifiers, speed, and anomaly reasons.
+        Architected <strong>orchestration loop (Sentinel)</strong> that continuously cycles through data collection → anomaly detection → visualization every 30 seconds with graceful error handling.
+      </p>
+
+      <span class="project-highlight">Key Detection Algorithm Implementation</span>
+      <div class="code-block">
+<pre>
+<span class="code-keyword">import</span> sqlite3
+<span class="code-keyword">import</span> math
+
+<span class="code-keyword">def</span> <span class="code-func">haversine</span>(lat1, lon1, lat2, lon2):
+    <span class="code-string">"""Calculate great-circle distance between two GPS coordinates (km)"""</span>
+    R = <span class="code-string">6371</span>  <span class="code-comment"># Earth radius in km</span>
+    phi1, phi2 = math.radians(lat1), math.radians(lat2)
+    dphi = math.radians(lat2 - lat1)
+    dlambda = math.radians(lon2 - lon1)
+    
+    a = math.sin(dphi/<span class="code-string">2</span>)**<span class="code-string">2</span> + math.cos(phi1)*math.cos(phi2)*math.sin(dlambda/<span class="code-string">2</span>)**<span class="code-string">2</span>
+    c = <span class="code-string">2</span> * math.atan2(math.sqrt(a), math.sqrt(<span class="code-string">1</span>-a))
+    <span class="code-keyword">return</span> R * c
+
+<span class="code-keyword">def</span> <span class="code-func">detect_anomalies</span>():
+    conn = sqlite3.connect(<span class="code-string">"surveillance_log.db"</span>)
+    cursor = conn.cursor()
+    
+    <span class="code-comment"># Fetch last 2 positions for each aircraft using Window Functions</span>
+    cursor.execute(<span class="code-string">'''
+        SELECT id, timestamp, lat, lon, velocity, icao24
+        FROM flight_data 
+        WHERE icao24 = ?
+        ORDER BY timestamp DESC LIMIT 2
+    '''</span>)
+    
+    <span class="code-keyword">for</span> aircraft <span class="code-keyword">in</span> cursor.fetchall():
+        latest, previous = aircraft[<span class="code-string">0</span>], aircraft[<span class="code-string">1</span>]
+        
+        <span class="code-comment"># Calculate implied speed from position changes</span>
+        distance_km = haversine(latest[<span class="code-string">'lat'</span>], latest[<span class="code-string">'lon'</span>], 
+                                previous[<span class="code-string">'lat'</span>], previous[<span class="code-string">'lon'</span>])
+        time_diff = latest[<span class="code-string">'timestamp'</span>] - previous[<span class="code-string">'timestamp'</span>]
+        implied_speed_kmh = (distance_km / time_diff) * <span class="code-string">3600</span>
+        
+        <span class="code-comment"># Flag teleportation: supersonic commercial aircraft (> 2000 km/h)</span>
+        <span class="code-keyword">if</span> implied_speed_kmh > <span class="code-string">2000</span>:
+            reason = <span class="code-func">f</span><span class="code-string">"TELEPORTATION: Moved {distance_km:.2f}km in {time_diff}s"</span>
+            cursor.execute(<span class="code-string">'''
+                UPDATE flight_data 
+                SET is_anomaly=1, anomaly_reason=? 
+                WHERE id=?
+            '''</span>, (reason, latest[<span class="code-string">'id'</span>]))
+    
+    conn.commit()
+    conn.close()
+</pre>
+      </div>
+
+      <span class="project-highlight">Key Features</span>
+      <ul class="feature-list">
+        <li><strong>Real-Time Data Collection:</strong> Integrated OpenSky Network REST API with configurable bounding boxes for targeted surveillance areas (London, Black Sea, etc.)</li>
+        <li><strong>Database Architecture:</strong> Designed normalized SQLite schema with indexes on frequently queried fields (icao24, timestamp) for O(log n) lookups on 10,000+ flight records</li>
+        <li><strong>Geospatial Analysis:</strong> Implemented Haversine formula for spherical distance calculations between consecutive GPS coordinates with sub-kilometer precision</li>
+        <li><strong>Anomaly Detection:</strong> Automated threat identification by comparing implied speeds (distance/time) against physical limits for commercial aircraft</li>
+        <li><strong>Interactive Dashboard:</strong> Folium map with automatic viewport fitting, color-coded markers (red=threat, green=normal), and detailed popups showing speed/status/anomaly reasons</li>
+        <li><strong>Red Team Testing:</strong> Built-in threat injection tool for testing detection capabilities (simulates teleportation from London → New York)</li>
+        <li><strong>Continuous Monitoring:</strong> Orchestration loop (Sentinel) that automatically refreshes every 30 seconds with error handling and modular architecture</li>
+        <li><strong>Standalone Executable:</strong> PyInstaller compilation for deployment without Python dependencies</li>
+      </ul>
+
+      <p><strong>Technologies:</strong> Python, OpenSky Network API, SQLite (Database Design), Folium (Geospatial Visualization), Geospatial Algorithms (Haversine), REST APIs, PyInstaller</p>
+      <p><strong>Architecture:</strong> Modular design with separate interceptor, detector, visualization, and orchestration layers. 30-second refresh cycles with graceful error handling and automatic dashboard updates.</p>
+      <a href="https://github.com/NicholasmooreWU/gps_interceptor" class="project-link" target="_blank">View on GitHub →</a>
+    </div>
+
+    <div class="project">
       <h3>Secure Image Steganography Tool</h3>
       <span class="project-highlight">Overview</span>
       <p>
