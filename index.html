@@ -194,6 +194,49 @@
     <h2>Technical Projects</h2>
     
     <div class="project">
+      <h3>Automated Conflict Intelligence Monitor</h3>
+      
+      <span class="project-highlight">The Challenge</span>
+      <p>
+        Intelligence analysts face an overwhelming volume of unstructured open-source data (OSINT). 
+        My goal was to build an automated pipeline that ingests global news streams, extracts key entities (actors, organizations), and visualizes the "centers of gravity" in geopolitical conflicts in real-time.
+      </p>
+
+      <span class="project-highlight">The Solution</span>
+      <p>
+        I engineered an end-to-end intelligence system using <strong>Python</strong>.
+        The system utilizes <strong>NewsAPI</strong> for automated collection, <strong>spaCy (NLP)</strong> for Named Entity Recognition (NER), and <strong>VADER</strong> for sentiment analysis.
+        Data is archived in a relational <strong>SQLite</strong> database to ensure historical persistence.
+        The final product is a <strong>Streamlit Dashboard</strong> featuring an interactive physics-based network graph that reveals hidden connections between political actors.
+      </p>
+
+      <span class="project-highlight">Key NLP Implementation</span>
+      <div class="code-block">
+<pre>
+<span class="code-keyword">def</span> <span class="code-func">analyze_article</span>(article):
+    <span class="code-string">"""Extracts Entities and Sentiment from intelligence reports"""</span>
+    text = <span class="code-func">f</span><span class="code-string">"{article['title']}. {article['description']}"</span>
+    
+    <span class="code-comment"># 1. Sentiment Analysis (-1.0 to +1.0)</span>
+    sentiment_score = analyzer.polarity_scores(text)[<span class="code-string">'compound'</span>]
+
+    <span class="code-comment"># 2. Named Entity Recognition (NER)</span>
+    doc = nlp(text)
+    entities = []
+    
+    <span class="code-keyword">for</span> ent <span class="code-keyword">in</span> doc.ents:
+        <span class="code-keyword">if</span> ent.label_ <span class="code-keyword">in</span> [<span class="code-string">"GPE"</span>, <span class="code-string">"ORG"</span>, <span class="code-string">"PERSON"</span>]:
+            entities.append((ent.text, ent.label_))
+    
+    <span class="code-keyword">return</span> sentiment_score, entities
+</pre>
+      </div>
+
+      <p><strong>Technologies:</strong> Python, NLP (spaCy), Network Graph Theory (PyVis), SQL, Streamlit, OSINT</p>
+      <a href="https://github.com/NicholasmooreWU/automated-conflict-monitor" class="project-link" target="_blank">View Source →</a>
+    </div>
+
+    <div class="project">
       <h3>Stock Market Data Analysis Engine</h3>
       
       <span class="project-highlight">The Challenge</span>
