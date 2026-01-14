@@ -192,49 +192,6 @@
 
   <section id="projects">
     <h2>Technical Projects</h2>
-    
-    <div class="project">
-      <h3>Automated Conflict Intelligence Monitor</h3>
-      
-      <span class="project-highlight">The Challenge</span>
-      <p>
-        Intelligence analysts face an overwhelming volume of unstructured open-source data (OSINT). 
-        My goal was to build an automated pipeline that ingests global news streams, extracts key entities (actors, organizations), and visualizes the "centers of gravity" in geopolitical conflicts in real-time.
-      </p>
-
-      <span class="project-highlight">The Solution</span>
-      <p>
-        I engineered an end-to-end intelligence system using <strong>Python</strong>.
-        The system utilizes <strong>NewsAPI</strong> for automated collection, <strong>spaCy (NLP)</strong> for Named Entity Recognition (NER), and <strong>VADER</strong> for sentiment analysis.
-        Data is archived in a relational <strong>SQLite</strong> database to ensure historical persistence.
-        The final product is a <strong>Streamlit Dashboard</strong> featuring an interactive physics-based network graph that reveals hidden connections between political actors.
-      </p>
-
-      <span class="project-highlight">Key NLP Implementation</span>
-      <div class="code-block">
-<pre>
-<span class="code-keyword">def</span> <span class="code-func">analyze_article</span>(article):
-    <span class="code-string">"""Extracts Entities and Sentiment from intelligence reports"""</span>
-    text = <span class="code-func">f</span><span class="code-string">"{article['title']}. {article['description']}"</span>
-    
-    <span class="code-comment"># 1. Sentiment Analysis (-1.0 to +1.0)</span>
-    sentiment_score = analyzer.polarity_scores(text)[<span class="code-string">'compound'</span>]
-
-    <span class="code-comment"># 2. Named Entity Recognition (NER)</span>
-    doc = nlp(text)
-    entities = []
-    
-    <span class="code-keyword">for</span> ent <span class="code-keyword">in</span> doc.ents:
-        <span class="code-keyword">if</span> ent.label_ <span class="code-keyword">in</span> [<span class="code-string">"GPE"</span>, <span class="code-string">"ORG"</span>, <span class="code-string">"PERSON"</span>]:
-            entities.append((ent.text, ent.label_))
-    
-    <span class="code-keyword">return</span> sentiment_score, entities
-</pre>
-      </div>
-
-      <p><strong>Technologies:</strong> Python, NLP (spaCy), Network Graph Theory (PyVis), SQL, Streamlit, OSINT</p>
-      <a href="https://github.com/NicholasmooreWU/automated-conflict-monitor" class="project-link" target="_blank">View Source →</a>
-    </div>
 
     <div class="project">
       <h3>Stock Market Data Analysis Engine</h3>
@@ -278,66 +235,6 @@
     </div>
 
     <div class="project">
-      <h3>League of Legends Advanced Analytics Dashboard</h3>
-      
-      <span class="project-highlight">The Challenge</span>
-      <p>
-        Raw match data provides statistics (Kills, Deaths, CS) but lacks context on player "Playstyle" and performance trends. 
-        The goal was to build a comprehensive analytics platform that combines machine learning, statistical analysis, and interactive visualizations to provide actionable insights for player improvement.
-      </p>
-
-      <span class="project-highlight">The Solution</span>
-      <p>
-        Developed a full-stack analytics platform with a <strong>Flask REST API backend</strong> and <strong>Streamlit dashboard frontend</strong>.
-        Implemented <strong>concurrent threading</strong> (ThreadPoolExecutor with 10 workers) to efficiently fetch and process 100+ matches from the Riot Games API with connection pooling and smart caching (10-minute TTL).
-        Built <strong>K-Means clustering algorithm</strong> to classify players into 4 playstyles (Aggressive, Farming-Focused, Vision-Control, Team-Fighter) using 5 normalized feature vectors.
-        Created <strong>time-series performance tracking</strong> with 7 & 14-game moving averages to identify trends in win rate and KDA.
-        Implemented <strong>statistical analysis module</strong> featuring Wilson score confidence intervals, two-proportion z-tests for role performance comparison, and variance analysis for consistency metrics.
-      </p>
-
-      <span class="project-highlight">Key Features</span>
-      <ul class="feature-list">
-        <li><strong>Interactive Streamlit Dashboard:</strong> Real-time analysis with Plotly visualizations, champion recommendations by role, and performance trend analysis across multiple tabs</li>
-        <li><strong>Machine Learning Classification:</strong> Unsupervised learning to identify dominant playstyles with characteristic analysis for each cluster</li>
-        <li><strong>Statistical Significance Testing:</strong> Automated hypothesis testing to determine if performance differences between roles are statistically significant</li>
-        <li><strong>Data Export Capabilities:</strong> CSV export for Excel analysis and JSON export with complete metadata for Tableau/Power BI integration</li>
-        <li><strong>Performance Optimization:</strong> Smart caching system, retry logic with exponential backoff, and adaptive fetch sizing achieving <50ms response times for cached requests</li>
-      </ul>
-
-      <span class="project-highlight">Key ML Implementation</span>
-      <div class="code-block">
-<pre>
-<span class="code-keyword">def</span> <span class="code-func">calculate_playstyle_clustering</span>(matches):
-    <span class="code-string">"""Use K-means clustering to identify player playstyle based on stats patterns"""</span>
-    
-    <span class="code-comment"># 1. Feature Engineering: Normalize stats by game duration</span>
-    features = []
-    <span class="code-keyword">for</span> match <span class="code-keyword">in</span> matches:
-        duration = match[<span class="code-string">'game_duration'</span>] / <span class="code-string">60</span>
-        features.append([
-            match[<span class="code-string">'damage'</span>] / duration,  <span class="code-comment"># Damage per minute</span>
-            match[<span class="code-string">'cs'</span>] / duration,      <span class="code-comment"># CS per minute</span>
-            match[<span class="code-string">'vision'</span>] / duration,  <span class="code-comment"># Vision per minute</span>
-            match[<span class="code-string">'kda'</span>],
-            (match[<span class="code-string">'kills'</span>] + match[<span class="code-string">'assists'</span>]) / <span class="code-func">max</span>(duration, <span class="code-string">1</span>) <span class="code-comment"># KP Rate</span>
-        ])
-    
-    <span class="code-comment"># 2. Normalize & Cluster</span>
-    scaler = StandardScaler()
-    features_scaled = scaler.fit_transform(np.array(features))
-    
-    kmeans = <span class="code-class">KMeans</span>(n_clusters=<span class="code-string">4</span>, random_state=<span class="code-string">42</span>, n_init=<span class="code-string">10</span>)
-    cluster_labels = kmeans.fit_predict(features_scaled)
-    <span class="code-keyword">return</span> assign_dominant_playstyle(scores)
-</pre>
-      </div>
-
-      <p><strong>Technologies:</strong> Python, Flask (REST API), Streamlit, Scikit-Learn (K-Means), SciPy (Statistical Tests), Plotly (Visualizations), Pandas (Time-Series), ThreadPoolExecutor (Concurrency)</p>
-      <p><strong>Performance:</strong> 15-30s first load (20 matches), <50ms cached requests, supports 10-100 match analysis with one-click launcher</p>
-      <a href="https://github.com/NicholasmooreWU/lol-insights" class="project-link" target="_blank">View on GitHub →</a>
-    </div>
-
-    <div class="project">
       <h3>Simple SCM (Rust Implementation)</h3>
       <span class="project-highlight">The Challenge</span>
       <p>
@@ -359,43 +256,43 @@
 <span class="code-keyword">use</span> sha2::{Digest, Sha256};
 <span class="code-keyword">use</span> std::collections::BTreeMap;
 
-<span class="code-comment">/// Content-addressable commit structure</span>
-<span class="code-macro">#[derive(Serialize, Deserialize, Debug)]</span>
-<span class="code-keyword">struct</span> <span class="code-type">Commit</span> {
-    tree: <span class="code-type">BTreeMap</span>&lt;<span class="code-type">String</span>, <span class="code-type">String</span>&gt;, <span class="code-comment">// Maps filenames to SHA-256 hashes</span>
-    parent: <span class="code-type">Option</span>&lt;<span class="code-type">String</span>&gt;,         <span class="code-comment">// Parent commit hash</span>
-    message: <span class="code-type">String</span>,
-    timestamp: <span class="code-type">DateTime</span>&lt;<span class="code-type">Utc</span>&gt;,
+/// Content-addressable commit structure
+#[derive(Serialize, Deserialize, Debug)]
+struct Commit {
+    tree: BTreeMap<String, String>, // Maps filenames to SHA-256 hashes
+    parent: Option<String>,         // Parent commit hash
+    message: String,
+    timestamp: DateTime<Utc>,
 }
 
-<span class="code-keyword">fn</span> <span class="code-func">cmd_commit</span>(message: &<span class="code-type">str</span>) -> <span class="code-type">Result</span>&lt;()&gt; {
-    <span class="code-keyword">let</span> repo = repo_root()?;
-    <span class="code-keyword">let</span> index = load_index(&repo)?;
+fn cmd_commit(message: &str) -> Result<()> {
+    let repo = repo_root()?;
+    let index = load_index(&repo)?;
     
-    <span class="code-keyword">let</span> <span class="code-keyword">mut</span> tree = <span class="code-type">BTreeMap</span>::new();
-    <span class="code-keyword">for</span> rel <span class="code-keyword">in</span> &index {
-        <span class="code-keyword">let</span> path = repo.join(rel);
-        <span class="code-keyword">let</span> <span class="code-keyword">mut</span> f = <span class="code-type">fs</span>::<span class="code-type">File</span>::open(&path)?;
-        <span class="code-keyword">let</span> <span class="code-keyword">mut</span> bytes = vec![];
-        f.read_to_end(&<span class="code-keyword">mut</span> bytes)?;
+    let mut tree = BTreeMap::new();
+    for rel in &index {
+        let path = repo.join(rel);
+        let mut f = fs::File::open(&path)?;
+        let mut bytes = vec![];
+        f.read_to_end(&mut bytes)?;
         
-        <span class="code-comment">// Store blob via SHA-256 hash</span>
-        <span class="code-keyword">let</span> blob_hash = store_blob(&repo, &bytes)?; 
+        // Store blob via SHA-256 hash
+        let blob_hash = store_blob(&repo, &bytes)?; 
         tree.insert(rel.clone(), blob_hash);
     }
 
-    <span class="code-keyword">let</span> commit = <span class="code-type">Commit</span> {
+    let commit = Commit {
         tree,
         parent: read_head(&repo)?,
         message: message.to_string(),
-        timestamp: <span class="code-type">Utc</span>::now(),
+        timestamp: Utc::now(),
     };
     
-    <span class="code-comment">// Serialize commit and update HEAD</span>
-    <span class="code-keyword">let</span> commit_hash = commit_object_hash(&commit)?;
+    // Serialize commit and update HEAD
+    let commit_hash = commit_object_hash(&commit)?;
     write_head(&repo, &commit_hash)?;
-    <span class="code-type">println!</span>(<span class="code-string">"Committed: {}"</span>, commit_hash);
-    <span class="code-type">Ok</span>(())
+    println!("Committed: {}", commit_hash);
+    Ok(())
 }
 </pre>
       </div>
@@ -413,159 +310,6 @@
       </p>
       <p><strong>Technologies:</strong> Python, Pandas, Matplotlib, Statistical Modeling</p>
       <a href="https://docs.google.com/presentation/d/1wKXTAAp3v-li1Y3glPJTHkFJJfPD9OHmstSC_z0AnLg/edit" class="project-link" target="_blank">View Presentation →</a>
-    </div>
-
-    <div class="project">
-      <h3>Packet Sniffer (Rust)</h3>
-      <span class="project-highlight">The Challenge</span>
-      <p>
-        Building a real-time network packet analyzer capable of capturing and decoding live network traffic at the data link layer.
-        The system needed to handle raw packet capture with minimal overhead while parsing multiple protocol layers (Ethernet, IP, TCP/UDP).
-      </p>
-
-      <span class="project-highlight">The Solution</span>
-      <p>
-        Developed a low-level packet sniffer in Rust using the <strong>pnet library</strong> for raw socket access and packet manipulation.
-        Implemented <strong>zero-copy packet parsing</strong> by directly interpreting binary data structures without deserialization overhead.
-        Created a multi-layer protocol decoder supporting <strong>IPv4/IPv6, TCP/UDP, ICMP, and ARP</strong> with real-time display of source/destination addresses, ports, and TCP flags.
-      </p>
-
-      <span class="project-highlight">Key Systems Implementation</span>
-      <div class="code-block">
-<pre>
-<span class="code-keyword">use</span> pnet::datalink;
-<span class="code-keyword">use</span> pnet::packet::ethernet::{EthernetPacket, EtherTypes};
-<span class="code-keyword">use</span> pnet::packet::tcp::{TcpPacket, TcpFlags};
-
-<span class="code-keyword">fn</span> <span class="code-func">main</span>() {
-    <span class="code-keyword">let</span> interfaces = datalink::interfaces();
-    <span class="code-keyword">let</span> interface = interfaces
-        .into_iter()
-        .find(|iface| iface.is_up() && !iface.is_loopback())
-        .expect(<span class="code-string">"No suitable network interface found"</span>);
-    
-    <span class="code-comment">// Create raw packet capture channel (requires root/admin privileges)</span>
-    <span class="code-keyword">let</span> (_, <span class="code-keyword">mut</span> rx) = <span class="code-keyword">match</span> datalink::channel(&interface, Default::default()) {
-        <span class="code-type">Ok</span>(datalink::Channel::Ethernet(tx, rx)) => (tx, rx),
-        <span class="code-type">Err</span>(e) => <span class="code-macro">panic!</span>(<span class="code-string">"Failed to create datalink channel: {}"</span>, e),
-    };
-    
-    <span class="code-comment">// Zero-copy packet parsing loop</span>
-    <span class="code-keyword">loop</span> {
-        <span class="code-keyword">match</span> rx.next() {
-            <span class="code-type">Ok</span>(packet) => {
-                <span class="code-keyword">if</span> <span class="code-keyword">let</span> <span class="code-type">Some</span>(ethernet) = EthernetPacket::new(packet) {
-                    handle_ethernet_packet(&ethernet);
-                }
-            }
-        }
-    }
-}
-
-<span class="code-keyword">fn</span> <span class="code-func">get_tcp_flags</span>(tcp: &TcpPacket) -> <span class="code-type">String</span> {
-    <span class="code-keyword">let</span> <span class="code-keyword">mut</span> flags = <span class="code-type">Vec</span>::new();
-    <span class="code-keyword">let</span> flag_bits = tcp.get_flags();
-    
-    <span class="code-comment">// Bitwise flag extraction for TCP handshake analysis</span>
-    <span class="code-keyword">if</span> flag_bits & TcpFlags::SYN != <span class="code-string">0</span> { flags.push(<span class="code-string">"SYN"</span>); }
-    <span class="code-keyword">if</span> flag_bits & TcpFlags::ACK != <span class="code-string">0</span> { flags.push(<span class="code-string">"ACK"</span>); }
-    <span class="code-keyword">if</span> flag_bits & TcpFlags::FIN != <span class="code-string">0</span> { flags.push(<span class="code-string">"FIN"</span>); }
-    
-    flags.join(<span class="code-string">","</span>)
-}
-</pre>
-      </div>
-
-      <p><strong>Technologies:</strong> Rust, pnet (Packet Manipulation), Raw Sockets, Binary Protocol Parsing, Systems Programming</p>
-      <p><strong>Key Features:</strong> Real-time packet capture, IPv4/IPv6 support, TCP flag analysis (SYN/ACK/FIN/RST), UDP port tracking, ARP detection, requires elevated privileges</p>
-      <a href="https://github.com/NicholasmooreWU/packet_sniffer" class="project-link" target="_blank">View on GitHub →</a>
-    </div>
-
-    <div class="project">
-      <h3>GPS Interceptor - Aircraft Surveillance & Anomaly Detection System</h3>
-      
-      <span class="project-highlight">The Challenge</span>
-      <p>
-        Building a real-time aircraft tracking and threat detection system capable of monitoring live flight data, identifying impossible flight patterns (teleportation, supersonic speeds), and visualizing threats on an interactive dashboard. 
-        The system needed to integrate external APIs, persist data efficiently, detect anomalies through geospatial calculations, and provide continuous surveillance with automated refresh cycles.
-      </p>
-
-      <span class="project-highlight">The Solution</span>
-      <p>
-        Developed a full-stack surveillance platform that integrates the <strong>OpenSky Network API</strong> for real-time aircraft tracking within configurable geographic bounds.
-        Implemented <strong>SQLite database architecture</strong> with optimized schema design for storing 30-second interval flight data (position, velocity, heading, anomaly flags).
-        Built <strong>geospatial anomaly detection engine</strong> using the Haversine formula to calculate great-circle distances between consecutive positions and identify aircraft moving faster than 2000 km/h.
-        Created <strong>interactive Folium map dashboard</strong> with auto-zoom functionality, color-coded threat markers (red for anomalies, green for normal), and detailed popups displaying ICAO24 identifiers, speed, and anomaly reasons.
-        Architected <strong>orchestration loop (Sentinel)</strong> that continuously cycles through data collection → anomaly detection → visualization every 30 seconds with graceful error handling.
-      </p>
-
-      <span class="project-highlight">Key Detection Algorithm Implementation</span>
-      <div class="code-block">
-<pre>
-<span class="code-keyword">import</span> sqlite3
-<span class="code-keyword">import</span> math
-
-<span class="code-keyword">def</span> <span class="code-func">haversine</span>(lat1, lon1, lat2, lon2):
-    <span class="code-string">"""Calculate great-circle distance between two GPS coordinates (km)"""</span>
-    R = <span class="code-string">6371</span>  <span class="code-comment"># Earth radius in km</span>
-    phi1, phi2 = math.radians(lat1), math.radians(lat2)
-    dphi = math.radians(lat2 - lat1)
-    dlambda = math.radians(lon2 - lon1)
-    
-    a = math.sin(dphi/<span class="code-string">2</span>)**<span class="code-string">2</span> + math.cos(phi1)*math.cos(phi2)*math.sin(dlambda/<span class="code-string">2</span>)**<span class="code-string">2</span>
-    c = <span class="code-string">2</span> * math.atan2(math.sqrt(a), math.sqrt(<span class="code-string">1</span>-a))
-    <span class="code-keyword">return</span> R * c
-
-<span class="code-keyword">def</span> <span class="code-func">detect_anomalies</span>():
-    conn = sqlite3.connect(<span class="code-string">"surveillance_log.db"</span>)
-    cursor = conn.cursor()
-    
-    <span class="code-comment"># Fetch last 2 positions for each aircraft using Window Functions</span>
-    cursor.execute(<span class="code-string">'''
-        SELECT id, timestamp, lat, lon, velocity, icao24
-        FROM flight_data 
-        WHERE icao24 = ?
-        ORDER BY timestamp DESC LIMIT 2
-    '''</span>)
-    
-    <span class="code-keyword">for</span> aircraft <span class="code-keyword">in</span> cursor.fetchall():
-        latest, previous = aircraft[<span class="code-string">0</span>], aircraft[<span class="code-string">1</span>]
-        
-        <span class="code-comment"># Calculate implied speed from position changes</span>
-        distance_km = haversine(latest[<span class="code-string">'lat'</span>], latest[<span class="code-string">'lon'</span>], 
-                                previous[<span class="code-string">'lat'</span>], previous[<span class="code-string">'lon'</span>])
-        time_diff = latest[<span class="code-string">'timestamp'</span>] - previous[<span class="code-string">'timestamp'</span>]
-        implied_speed_kmh = (distance_km / time_diff) * <span class="code-string">3600</span>
-        
-        <span class="code-comment"># Flag teleportation: supersonic commercial aircraft (> 2000 km/h)</span>
-        <span class="code-keyword">if</span> implied_speed_kmh > <span class="code-string">2000</span>:
-            reason = <span class="code-func">f</span><span class="code-string">"TELEPORTATION: Moved {distance_km:.2f}km in {time_diff}s"</span>
-            cursor.execute(<span class="code-string">'''
-                UPDATE flight_data 
-                SET is_anomaly=1, anomaly_reason=? 
-                WHERE id=?
-            '''</span>, (reason, latest[<span class="code-string">'id'</span>]))
-    
-    conn.commit()
-    conn.close()
-</pre>
-      </div>
-
-      <span class="project-highlight">Key Features</span>
-      <ul class="feature-list">
-        <li><strong>Real-Time Data Collection:</strong> Integrated OpenSky Network REST API with configurable bounding boxes for targeted surveillance areas (London, Black Sea, etc.)</li>
-        <li><strong>Database Architecture:</strong> Designed normalized SQLite schema with indexes on frequently queried fields (icao24, timestamp) for O(log n) lookups on 10,000+ flight records</li>
-        <li><strong>Geospatial Analysis:</strong> Implemented Haversine formula for spherical distance calculations between consecutive GPS coordinates with sub-kilometer precision</li>
-        <li><strong>Anomaly Detection:</strong> Automated threat identification by comparing implied speeds (distance/time) against physical limits for commercial aircraft</li>
-        <li><strong>Interactive Dashboard:</strong> Folium map with automatic viewport fitting, color-coded markers (red=threat, green=normal), and detailed popups showing speed/status/anomaly reasons</li>
-        <li><strong>Red Team Testing:</strong> Built-in threat injection tool for testing detection capabilities (simulates teleportation from London → New York)</li>
-        <li><strong>Continuous Monitoring:</strong> Orchestration loop (Sentinel) that automatically refreshes every 30 seconds with error handling and modular architecture</li>
-        <li><strong>Standalone Executable:</strong> PyInstaller compilation for deployment without Python dependencies</li>
-      </ul>
-
-      <p><strong>Technologies:</strong> Python, OpenSky Network API, SQLite (Database Design), Folium (Geospatial Visualization), Geospatial Algorithms (Haversine), REST APIs, PyInstaller</p>
-      <p><strong>Architecture:</strong> Modular design with separate interceptor, detector, visualization, and orchestration layers. 30-second refresh cycles with graceful error handling and automatic dashboard updates.</p>
-      <a href="https://github.com/NicholasmooreWU/gps_interceptor" class="project-link" target="_blank">View on GitHub →</a>
     </div>
 
     <div class="project">
