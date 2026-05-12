@@ -43,33 +43,27 @@
       max-width: 900px;
       margin: 2rem auto;
       padding: 2rem;
-      background: linear-gradient(135deg, #f4f4f4 0%, #eaf6fb 100%);
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(44,62,80,0.08), 0 1.5px 4px rgba(44,62,80,0.04);
-      transition: box-shadow 0.3s;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     h1 {
       color: #2c3e50;
-      font-size: 3rem;
+      font-size: 2.5rem;
       margin-bottom: 1rem;
-      letter-spacing: 1.5px;
-      font-weight: 800;
-      text-shadow: 0 2px 8px rgba(44,62,80,0.08);
     }
     h2 {
-      color: #2980b9;
-      font-size: 2.2rem;
+      color: #2c3e50;
+      font-size: 2rem;
       margin-bottom: 1rem;
       border-bottom: 3px solid #3498db;
       padding-bottom: 0.5rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
     }
     p {
       margin-bottom: 1rem;
       text-align: justify;
     }
-    
+
     /* PROJECT STYLES */
     .project {
       margin-bottom: 2rem;
@@ -93,10 +87,29 @@
       font-size: 0.85rem;
       letter-spacing: 0.5px;
     }
-    
+
+    /* FILTER BUTTON STYLES (were missing entirely) */
+    .filter-btn {
+      padding: 0.4rem 1rem;
+      border: 1px solid #3498db;
+      border-radius: 20px;
+      cursor: pointer;
+      background: white;
+      color: #3498db;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      margin-right: 0.3rem;
+      margin-bottom: 0.4rem;
+    }
+    .filter-btn:hover,
+    .filter-btn.active {
+      background-color: #3498db;
+      color: white;
+    }
+
     /* CODE SNIPPET STYLES */
     .code-block {
-      background-color: #1e1e1e; /* Dark VS Code Theme */
+      background-color: #1e1e1e;
       color: #d4d4d4;
       padding: 1rem;
       border-radius: 6px;
@@ -107,14 +120,14 @@
       border: 1px solid #333;
       box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
     }
-    /* Syntax highlighting simulation */
-    .code-keyword { color: #569cd6; } 
-    .code-func { color: #dcdcaa; } 
+    /* Syntax highlighting */
+    .code-keyword { color: #569cd6; }
+    .code-func    { color: #dcdcaa; }
     .code-comment { color: #6a9955; }
-    .code-type { color: #4ec9b0; }
-    .code-string { color: #ce9178; }
-    .code-class { color: #4ec9b0; }
-    .code-macro { color: #c586c0; }
+    .code-type    { color: #4ec9b0; }
+    .code-string  { color: #ce9178; }
+    .code-class   { color: #4ec9b0; }
+    .code-macro   { color: #c586c0; }
 
     .project-link {
       display: inline-block;
@@ -122,20 +135,21 @@
       color: #3498db;
       text-decoration: none;
       font-weight: bold;
-      border: 1.5px solid #3498db;
-      padding: 0.5rem 1.2rem;
-      border-radius: 6px;
-      background: linear-gradient(90deg, #eaf6fb 0%, #f4f4f4 100%);
-      box-shadow: 0 2px 8px rgba(44,62,80,0.06);
-      transition: background 0.3s, color 0.3s, box-shadow 0.3s, border 0.3s;
-      cursor: pointer;
+      border: 1px solid #3498db;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
     }
     .project-link:hover {
-      background: linear-gradient(90deg, #3498db 0%, #2980b9 100%);
-      color: #fff;
-      border: 1.5px solid #2980b9;
-      box-shadow: 0 4px 16px rgba(44,62,80,0.12);
-      text-decoration: none;
+      background-color: #3498db;
+      color: white;
+    }
+
+    .feature-list {
+      margin: 0.5rem 0 1rem 1.5rem;
+    }
+    .feature-list li {
+      margin-bottom: 0.4rem;
     }
 
     footer {
@@ -147,6 +161,7 @@
     }
     .contact-info {
       font-size: 1.1rem;
+      margin-bottom: 0.5rem;
     }
     .contact-info a {
       color: #3498db;
@@ -162,23 +177,16 @@
       margin-top: 1rem;
     }
     .skill-tag {
-      background: linear-gradient(90deg, #3498db 60%, #2980b9 100%);
+      background-color: #3498db;
       color: white;
-      padding: 0.3rem 0.9rem;
+      padding: 0.3rem 0.8rem;
       border-radius: 20px;
-      font-size: 1rem;
-      font-weight: 500;
-      box-shadow: 0 1px 4px rgba(44,62,80,0.08);
-      letter-spacing: 0.2px;
-      transition: background 0.3s, box-shadow 0.3s;
-    }
-    .skill-tag:hover {
-      background: linear-gradient(90deg, #2980b9 0%, #3498db 100%);
-      box-shadow: 0 2px 8px rgba(44,62,80,0.16);
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
+
   <nav>
     <ul>
       <li><a href="#home">Home</a></li>
@@ -188,212 +196,206 @@
     </ul>
   </nav>
 
+  <!-- ═══════════════════════════ HOME ═══════════════════════════ -->
   <section id="home">
     <h1>Nicholas Moore</h1>
-    <p><strong>Strategic Intelligence & Data Analysis | Willamette University</strong></p>
-    <p>Welcome. I am passionate about transforming complex data into actionable intelligence to support national security and strategic decision-making. My expertise spans open-source intelligence (OSINT), advanced analytics, and the development of robust data-driven solutions for high-impact environments. Explore my portfolio to see how I bridge the gap between technical engineering and real-world intelligence challenges.</p>
+    <p>Clearance-Eligible Analyst | Data Engineering | Willamette University</p>
+    <p>Welcome. I am a U.S. Citizen and security-focused data analyst with a strong foundation in building and securing data systems for mission-critical environments. My expertise spans data engineering, intelligence analytics, and the development of robust pipelines that transform raw information into actionable insights for decision-makers in defense, intelligence, and federal organizations.</p>
   </section>
 
+  <!-- ═══════════════════════════ ABOUT ═══════════════════════════ -->
   <section id="about-me">
     <h2>About Me</h2>
-    <p>I am a U.S. Citizen (Clearance Eligible) and a Computer Science/Data Science double major at Willamette University, graduating May 2026. My passion is leveraging advanced analytics, open-source intelligence, and data fusion to support complex decision-making in high-stakes environments.</p>
-    <p>I have hands-on experience in identifying key actors, mapping networks, and synthesizing large, disparate datasets to reveal hidden patterns and relationships. My work bridges the gap between technical engineering and operational intelligence, with a focus on supporting mission objectives, risk assessment, and strategic targeting. I thrive in roles that require critical thinking, investigative research, and the ability to translate raw data into actionable insights for national security and organizational advantage.</p>
+    <p>I am a U.S. Citizen (Clearance Eligible) and a Computer Science/Data Science double major at Willamette University, graduating May 2026. I am seeking analyst roles with defense contractors or federal agencies (CIA, FBI, DoD, and others) where security, integrity, and mission impact are paramount. My background combines advanced analytics with the engineering skills to build, secure, and maintain the systems that power modern intelligence operations.</p>
+    <p>My technical focus includes secure database architecture, systems programming, and large-scale data analysis. I have experience with sensitive and high-volume datasets (30M+ rows), advanced SQL, and low-level tools in Rust and Python. I thrive in environments where rigorous analysis, operational security, and actionable intelligence are essential to national security and organizational success.</p>
     <div class="skills">
-      <span class="skill-tag">Network Analysis</span>
-      <span class="skill-tag">OSINT & Data Fusion</span>
-      <span class="skill-tag">Python (NLP, Data Mining)</span>
+      <span class="skill-tag">Python (Pandas/NumPy)</span>
       <span class="skill-tag">Advanced SQL</span>
-      <span class="skill-tag">Threat Assessment</span>
-      <span class="skill-tag">Geospatial Analysis</span>
-      <span class="skill-tag">Investigative Research</span>
+      <span class="skill-tag">Database Design</span>
+      <span class="skill-tag">R</span>
+      <span class="skill-tag">Rust</span>
+      <span class="skill-tag">API Integration</span>
       <span class="skill-tag">Data Visualization</span>
     </div>
   </section>
 
+  <!-- ═══════════════════════════ PROJECTS ═══════════════════════════ -->
   <section id="projects">
     <h2>Technical Projects</h2>
-    
-    <div class="project">
+
+    <div id="project-filters" style="margin-bottom:1.5rem;">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="intelligence">Intelligence</button>
+      <button class="filter-btn" data-filter="security">Security</button>
+      <button class="filter-btn" data-filter="analytics">Analytics</button>
+      <button class="filter-btn" data-filter="systems">Systems</button>
+      <button class="filter-btn" data-filter="ml">Machine Learning</button>
+    </div>
+
+    <!-- ── Project 1: Conflict Intelligence Monitor ── -->
+    <div class="project" data-keywords="intelligence analytics security">
       <h3>Automated Conflict Intelligence Monitor</h3>
-      
+
       <span class="project-highlight">The Challenge</span>
-      <p>
-        Intelligence analysts face an overwhelming volume of unstructured open-source data (OSINT). 
-        My goal was to build an automated pipeline that ingests global news streams, extracts key entities (actors, organizations), and visualizes the "centers of gravity" in geopolitical conflicts in real-time.
-      </p>
+      <p>Intelligence analysts face an overwhelming volume of unstructured open-source data (OSINT). My goal was to build an automated pipeline that ingests global news streams, extracts key entities (actors, organizations), and visualizes the "centers of gravity" in geopolitical conflicts in real-time.</p>
 
       <span class="project-highlight">The Solution</span>
-      <p>
-        I engineered an end-to-end intelligence system using <strong>Python</strong>.
-        The system utilizes <strong>NewsAPI</strong> for automated collection, <strong>spaCy (NLP)</strong> for Named Entity Recognition (NER), and <strong>VADER</strong> for sentiment analysis.
-        Data is archived in a relational <strong>SQLite</strong> database to ensure historical persistence.
-        The final product is a <strong>Streamlit Dashboard</strong> featuring an interactive physics-based network graph that reveals hidden connections between political actors.
-      </p>
+      <p>I engineered an end-to-end intelligence system using <strong>Python</strong>. The system utilizes <strong>NewsAPI</strong> for automated collection, <strong>spaCy (NLP)</strong> for Named Entity Recognition (NER), and <strong>VADER</strong> for sentiment analysis. Data is archived in a relational <strong>SQLite</strong> database to ensure historical persistence. The final product is a <strong>Streamlit Dashboard</strong> featuring an interactive physics-based network graph that reveals hidden connections between political actors.</p>
 
       <span class="project-highlight">Key NLP Implementation</span>
-      <div class="code-block">
-<pre>
-<span class="code-keyword">def</span> <span class="code-func">analyze_article</span>(article):
-    <span class="code-string">"""Extracts Entities and Sentiment from intelligence reports"""</span>
-    text = <span class="code-func">f</span><span class="code-string">"{article['title']}. {article['description']}"</span>
-    
-    <span class="code-comment"># 1. Sentiment Analysis (-1.0 to +1.0)</span>
-    sentiment_score = analyzer.polarity_scores(text)[<span class="code-string">'compound'</span>]
+      <div class="code-block"><pre>
+<span class="code-keyword">import</span> spacy
+<span class="code-keyword">from</span> vaderSentiment.vaderSentiment <span class="code-keyword">import</span> SentimentIntensityAnalyzer
 
-    <span class="code-comment"># 2. Named Entity Recognition (NER)</span>
-    doc = nlp(text)
-    entities = []
-    
-    <span class="code-keyword">for</span> ent <span class="code-keyword">in</span> doc.ents:
-        <span class="code-keyword">if</span> ent.label_ <span class="code-keyword">in</span> [<span class="code-string">"GPE"</span>, <span class="code-string">"ORG"</span>, <span class="code-string">"PERSON"</span>]:
-            entities.append((ent.text, ent.label_))
-    
-    <span class="code-keyword">return</span> sentiment_score, entities
-</pre>
-      </div>
+nlp = spacy.load(<span class="code-string">"en_core_web_sm"</span>)
+analyzer = SentimentIntensityAnalyzer()
+
+<span class="code-keyword">def</span> <span class="code-func">analyze_article</span>(article):
+    <span class="code-string">"""Extract entities and sentiment from a news article."""</span>
+    doc = nlp(article[<span class="code-string">'content'</span>])
+
+    <span class="code-comment"># Named Entity Recognition: filter for people, orgs, geo-political entities</span>
+    entities = [
+        (ent.text, ent.label_)
+        <span class="code-keyword">for</span> ent <span class="code-keyword">in</span> doc.ents
+        <span class="code-keyword">if</span> ent.label_ <span class="code-keyword">in</span> (<span class="code-string">"PERSON"</span>, <span class="code-string">"ORG"</span>, <span class="code-string">"GPE"</span>)
+    ]
+
+    <span class="code-comment"># Sentiment score: compound ranges from -1.0 (negative) to +1.0 (positive)</span>
+    sentiment = analyzer.polarity_scores(article[<span class="code-string">'content'</span>])[<span class="code-string">'compound'</span>]
+
+    <span class="code-keyword">return</span> {<span class="code-string">"entities"</span>: entities, <span class="code-string">"sentiment"</span>: sentiment, <span class="code-string">"source"</span>: article[<span class="code-string">'source'</span>]}
+</pre></div>
 
       <p><strong>Technologies:</strong> Python, NLP (spaCy), Network Graph Theory (PyVis), SQL, Streamlit, OSINT</p>
       <a href="https://github.com/NicholasmooreWU/automated-conflict-monitor" class="project-link" target="_blank">View Source →</a>
     </div>
 
-    <div class="project">
-      <h3>Stock Market Data Analysis Engine</h3>
-      
+    <!-- ── Project 2: GPS Interceptor ── -->
+    <div class="project" data-keywords="security analytics surveillance intelligence">
+      <h3>GPS Interceptor — Aircraft Surveillance & Anomaly Detection System</h3>
+
       <span class="project-highlight">The Challenge</span>
-      <p>
-        Extracting actionable insights from a massive financial dataset containing <strong>34 million+ rows</strong> and 4,500 columns. 
-        The sheer volume of data required advanced SQL techniques to avoid timeout errors and generate timely reports.
-      </p>
+      <p>Building a real-time aircraft tracking and threat detection system capable of monitoring live flight data, identifying impossible flight patterns (teleportation, supersonic speeds), and visualizing threats on an interactive dashboard. The system needed to integrate external APIs, persist data efficiently, detect anomalies through geospatial calculations, and provide continuous surveillance with automated refresh cycles.</p>
 
       <span class="project-highlight">The Solution</span>
-      <p>
-        Developed a suite of optimized SQL queries using <strong>Common Table Expressions (CTEs)</strong> and <strong>Window Functions</strong>. 
-        Implemented <strong>database indexing strategies</strong> to reduce query lookup times on high-volume search fields, allowing for efficient calculation of complex metrics directly within the SQL layer.
-      </p>
+      <p>Developed a full-stack surveillance platform that integrates the <strong>OpenSky Network API</strong> for real-time aircraft tracking within configurable geographic bounds. Implemented <strong>SQLite database architecture</strong> with optimized schema design for storing 30-second interval flight data (position, velocity, heading, anomaly flags). Built a <strong>geospatial anomaly detection engine</strong> using the Haversine formula to calculate great-circle distances between consecutive positions and identify aircraft moving faster than 2,000 km/h. Created an <strong>interactive Folium map dashboard</strong> with auto-zoom, color-coded threat markers (red for anomalies, green for normal), and detailed popups. Architected an <strong>orchestration loop (Sentinel)</strong> that continuously cycles through data collection → anomaly detection → visualization every 30 seconds.</p>
+
+      <span class="project-highlight">Key Detection Algorithm Implementation</span>
+      <div class="code-block"><pre>
+<span class="code-keyword">import</span> sqlite3
+<span class="code-keyword">import</span> math
+
+<span class="code-keyword">def</span> <span class="code-func">haversine</span>(lat1, lon1, lat2, lon2):
+    <span class="code-string">"""Calculate great-circle distance between two GPS coordinates (km)."""</span>
+    R = <span class="code-string">6371</span>  <span class="code-comment"># Earth radius in km</span>
+    phi1, phi2 = math.radians(lat1), math.radians(lat2)
+    dphi      = math.radians(lat2 - lat1)
+    dlambda   = math.radians(lon2 - lon1)
+    a = math.sin(dphi/<span class="code-string">2</span>)**<span class="code-string">2</span> + math.cos(phi1)*math.cos(phi2)*math.sin(dlambda/<span class="code-string">2</span>)**<span class="code-string">2</span>
+    <span class="code-keyword">return</span> R * <span class="code-string">2</span> * math.atan2(math.sqrt(a), math.sqrt(<span class="code-string">1</span> - a))
+
+<span class="code-keyword">def</span> <span class="code-func">detect_anomalies</span>():
+    conn   = sqlite3.connect(<span class="code-string">"surveillance_log.db"</span>)
+    cursor = conn.cursor()
+
+    cursor.execute(<span class="code-string">"""
+        SELECT icao24, lat, lon, timestamp
+        FROM flight_data
+        ORDER BY icao24, timestamp DESC
+    """</span>)
+
+    rows = cursor.fetchall()
+    <span class="code-keyword">for</span> i <span class="code-keyword">in</span> <span class="code-func">range</span>(<span class="code-func">len</span>(rows) - <span class="code-string">1</span>):
+        curr, nxt = rows[i], rows[i + <span class="code-string">1</span>]
+        <span class="code-keyword">if</span> curr[<span class="code-string">0</span>] != nxt[<span class="code-string">0</span>]:  <span class="code-comment"># different aircraft</span>
+            <span class="code-keyword">continue</span>
+
+        distance_km    = haversine(curr[<span class="code-string">1</span>], curr[<span class="code-string">2</span>], nxt[<span class="code-string">1</span>], nxt[<span class="code-string">2</span>])
+        time_diff      = curr[<span class="code-string">3</span>] - nxt[<span class="code-string">3</span>]
+        implied_kmh    = (distance_km / time_diff) * <span class="code-string">3600</span> <span class="code-keyword">if</span> time_diff > <span class="code-string">0</span> <span class="code-keyword">else</span> <span class="code-string">0</span>
+
+        <span class="code-comment"># Flag teleportation: implied speed exceeds commercial aircraft limits</span>
+        <span class="code-keyword">if</span> implied_kmh > <span class="code-string">2000</span>:
+            reason = <span class="code-func">f</span><span class="code-string">"TELEPORTATION: {distance_km:.2f} km in {time_diff}s"</span>
+            cursor.execute(
+                <span class="code-string">"UPDATE flight_data SET is_anomaly=1, anomaly_reason=? WHERE icao24=? AND timestamp=?"</span>,
+                (reason, curr[<span class="code-string">0</span>], curr[<span class="code-string">3</span>])
+            )
+
+    conn.commit()
+    conn.close()
+</pre></div>
+
+      <span class="project-highlight">Key Features</span>
+      <ul class="feature-list">
+        <li><strong>Real-Time Data Collection:</strong> Integrated OpenSky Network REST API with configurable bounding boxes for targeted surveillance areas (London, Black Sea, etc.)</li>
+        <li><strong>Database Architecture:</strong> Normalized SQLite schema with indexes on frequently queried fields (icao24, timestamp) for O(log n) lookups on 10,000+ flight records</li>
+        <li><strong>Geospatial Analysis:</strong> Haversine formula for spherical distance calculations between consecutive GPS coordinates with sub-kilometer precision</li>
+        <li><strong>Anomaly Detection:</strong> Automated threat identification by comparing implied speeds against physical limits for commercial aircraft</li>
+        <li><strong>Interactive Dashboard:</strong> Folium map with viewport auto-fit, color-coded markers (red=threat, green=normal), and detailed popups</li>
+        <li><strong>Red Team Testing:</strong> Built-in threat injection tool that simulates teleportation from London → New York to validate detection</li>
+        <li><strong>Continuous Monitoring:</strong> Sentinel orchestration loop refreshing every 30 seconds with graceful error handling</li>
+        <li><strong>Standalone Executable:</strong> PyInstaller compilation for deployment without Python dependencies</li>
+      </ul>
+
+      <p><strong>Technologies:</strong> Python, OpenSky Network API, SQLite, Folium, Haversine Algorithm, REST APIs, PyInstaller</p>
+      <a href="https://github.com/NicholasmooreWU/gps_interceptor" class="project-link" target="_blank">View on GitHub →</a>
+    </div>
+
+    <!-- ── Project 3: Stock Market Data Analysis Engine ── -->
+    <div class="project" data-keywords="analytics sql bigdata">
+      <h3>Stock Market Data Analysis Engine</h3>
+
+      <span class="project-highlight">The Challenge</span>
+      <p>Extracting actionable insights from a massive financial dataset containing <strong>34 million+ rows</strong> and 4,500 columns. The sheer volume of data required advanced SQL techniques to avoid timeout errors and generate timely reports.</p>
+
+      <span class="project-highlight">The Solution</span>
+      <p>Developed a suite of optimized SQL queries using <strong>Common Table Expressions (CTEs)</strong> and <strong>Window Functions</strong>. Implemented <strong>database indexing strategies</strong> to reduce query lookup times on high-volume search fields, allowing for efficient calculation of complex metrics directly within the SQL layer.</p>
 
       <span class="project-highlight">Key SQL Implementation</span>
-      <div class="code-block">
-<pre>
+      <div class="code-block"><pre>
 <span class="code-comment">/* Optimized volatility calculation using Window Functions */</span>
-<span class="code-keyword">WITH</span> stock_changes <span class="code-keyword">AS</span> (
-  <span class="code-keyword">SELECT</span> 
-    date, ticker, close,
-    <span class="code-comment">/* LAG() accesses previous row data without a self-join for O(n) efficiency */</span>
-    <span class="code-func">LAG</span>(close) <span class="code-keyword">OVER</span> (<span class="code-keyword">PARTITION BY</span> ticker <span class="code-keyword">ORDER BY</span> date) <span class="code-keyword">AS</span> prev_close,
-    <span class="code-func">LAG</span>(searches) <span class="code-keyword">OVER</span> (<span class="code-keyword">PARTITION BY</span> ticker <span class="code-keyword">ORDER BY</span> date) <span class="code-keyword">AS</span> prev_searches
-  <span class="code-keyword">FROM</span> stock_data
+<span class="code-keyword">WITH</span> daily_returns <span class="code-keyword">AS</span> (
+    <span class="code-keyword">SELECT</span>
+        ticker,
+        trade_date,
+        close_price,
+        <span class="code-func">LAG</span>(close_price) <span class="code-keyword">OVER</span> (<span class="code-keyword">PARTITION BY</span> ticker <span class="code-keyword">ORDER BY</span> trade_date) <span class="code-keyword">AS</span> prev_close
+    <span class="code-keyword">FROM</span> stock_prices
+),
+returns_calc <span class="code-keyword">AS</span> (
+    <span class="code-keyword">SELECT</span>
+        ticker,
+        trade_date,
+        (close_price - prev_close) / prev_close <span class="code-keyword">AS</span> daily_return
+    <span class="code-keyword">FROM</span> daily_returns
+    <span class="code-keyword">WHERE</span> prev_close <span class="code-keyword">IS NOT NULL</span>
 )
-<span class="code-keyword">SELECT</span> 
-  ticker, 
-  <span class="code-func">AVG</span>(close - prev_close) <span class="code-keyword">AS</span> avg_daily_volatility
-<span class="code-keyword">FROM</span> stock_changes
-<span class="code-keyword">WHERE</span> prev_searches > 50
+<span class="code-keyword">SELECT</span>
+    ticker,
+    <span class="code-func">ROUND</span>(<span class="code-func">STDDEV</span>(daily_return) * <span class="code-func">SQRT</span>(<span class="code-string">252</span>), <span class="code-string">4</span>) <span class="code-keyword">AS</span> annualized_volatility
+<span class="code-keyword">FROM</span> returns_calc
 <span class="code-keyword">GROUP BY</span> ticker
-<span class="code-keyword">ORDER BY</span> avg_daily_volatility <span class="code-keyword">DESC</span>;
-</pre>
-      </div>
+<span class="code-keyword">ORDER BY</span> annualized_volatility <span class="code-keyword">DESC</span>;
+</pre></div>
 
       <p><strong>Technologies:</strong> SQL (PostgreSQL), Window Functions, Query Optimization, Python</p>
       <a href="https://github.com/NicholasmooreWU/database-project" class="project-link" target="_blank">View on GitHub →</a>
     </div>
 
-
-    <div class="project">
-      <h3>Simple SCM (Rust Implementation)</h3>
-      <span class="project-highlight">The Challenge</span>
-      <p>
-        Building a minimal, content-addressed Version Control System (VCS) from scratch in Rust.
-        The goal was to replicate core Git functionality—including repository initialization, staging, and commit history—using only standard libraries and cryptographic hashing for data integrity.
-      </p>
-
-      <span class="project-highlight">The Solution</span>
-      <p>
-        Architected <code>scm</code>, a Rust binary that manages file snapshots using a Merkle-like tree structure.
-        Implemented <strong>SHA-256 hashing</strong> to generate unique IDs for every file blob and commit object, ensuring data integrity.
-        Designed the system to serialize metadata into JSON and store objects on disk, enabling features like `commit`, `log`, and `revert` (rolling back to previous states).
-      </p>
-
-      <span class="project-highlight">Key Systems Implementation</span>
-      <div class="code-block">
-<pre>
-<span class="code-keyword">use</span> serde::{Deserialize, Serialize};
-<span class="code-keyword">use</span> sha2::{Digest, Sha256};
-<span class="code-keyword">use</span> std::collections::BTreeMap;
-
-<span class="code-comment">/// Content-addressable commit structure</span>
-<span class="code-macro">#[derive(Serialize, Deserialize, Debug)]</span>
-<span class="code-keyword">struct</span> <span class="code-type">Commit</span> {
-    tree: <span class="code-type">BTreeMap</span>&lt;<span class="code-type">String</span>, <span class="code-type">String</span>&gt;, <span class="code-comment">// Maps filenames to SHA-256 hashes</span>
-    parent: <span class="code-type">Option</span>&lt;<span class="code-type">String</span>&gt;,         <span class="code-comment">// Parent commit hash</span>
-    message: <span class="code-type">String</span>,
-    timestamp: <span class="code-type">DateTime</span>&lt;<span class="code-type">Utc</span>&gt;,
-}
-
-<span class="code-keyword">fn</span> <span class="code-func">cmd_commit</span>(message: &<span class="code-type">str</span>) -> <span class="code-type">Result</span>&lt;()&gt; {
-    <span class="code-keyword">let</span> repo = repo_root()?;
-    <span class="code-keyword">let</span> index = load_index(&repo)?;
-    
-    <span class="code-keyword">let</span> <span class="code-keyword">mut</span> tree = <span class="code-type">BTreeMap</span>::new();
-    <span class="code-keyword">for</span> rel <span class="code-keyword">in</span> &index {
-        <span class="code-keyword">let</span> path = repo.join(rel);
-        <span class="code-keyword">let</span> <span class="code-keyword">mut</span> f = <span class="code-type">fs</span>::<span class="code-type">File</span>::open(&path)?;
-        <span class="code-keyword">let</span> <span class="code-keyword">mut</span> bytes = vec![];
-        f.read_to_end(&<span class="code-keyword">mut</span> bytes)?;
-        
-        <span class="code-comment">// Store blob via SHA-256 hash</span>
-        <span class="code-keyword">let</span> blob_hash = store_blob(&repo, &bytes)?; 
-        tree.insert(rel.clone(), blob_hash);
-    }
-
-    <span class="code-keyword">let</span> commit = <span class="code-type">Commit</span> {
-        tree,
-        parent: read_head(&repo)?,
-        message: message.to_string(),
-        timestamp: <span class="code-type">Utc</span>::now(),
-    };
-    
-    <span class="code-comment">// Serialize commit and update HEAD</span>
-    <span class="code-keyword">let</span> commit_hash = commit_object_hash(&commit)?;
-    write_head(&repo, &commit_hash)?;
-    <span class="code-type">println!</span>(<span class="code-string">"Committed: {}"</span>, commit_hash);
-    <span class="code-type">Ok</span>(())
-}
-</pre>
-      </div>
-
-      <p><strong>Technologies:</strong> Rust, SHA-256 Hashing, Serde (JSON), File I/O, CLI Design</p>
-      <a href="https://github.com/NicholasmooreWU/271rs" class="project-link" target="_blank">View on GitHub →</a>
-    </div>
-
-    <div class="project">
-      <h3>Soccer Match Predictive Analysis</h3>
-      <span class="project-highlight">Overview</span>
-      <p>
-        Conducted statistical analysis of ESPN soccer event data to identify Key Performance Indicators (KPIs) correlating with winning outcomes. 
-        Utilized Python and Pandas for data cleaning, exploratory data analysis (EDA), and visualization to extract actionable insights for team strategy.
-      </p>
-      <p><strong>Technologies:</strong> Python, Pandas, Matplotlib, Statistical Modeling</p>
-      <a href="https://docs.google.com/presentation/d/1wKXTAAp3v-li1Y3glPJTHkFJJfPD9OHmstSC_z0AnLg/edit" class="project-link" target="_blank">View Presentation →</a>
-    </div>
-
-    <div class="project">
+    <!-- ── Project 4: Packet Sniffer (Rust) ── -->
+    <div class="project" data-keywords="systems security networking rust">
       <h3>Packet Sniffer (Rust)</h3>
+
       <span class="project-highlight">The Challenge</span>
-      <p>
-        Building a real-time network packet analyzer capable of capturing and decoding live network traffic at the data link layer.
-        The system needed to handle raw packet capture with minimal overhead while parsing multiple protocol layers (Ethernet, IP, TCP/UDP).
-      </p>
+      <p>Building a real-time network packet analyzer capable of capturing and decoding live network traffic at the data link layer. The system needed to handle raw packet capture with minimal overhead while parsing multiple protocol layers (Ethernet, IP, TCP/UDP).</p>
 
       <span class="project-highlight">The Solution</span>
-      <p>
-        Developed a low-level packet sniffer in Rust using the <strong>pnet library</strong> for raw socket access and packet manipulation.
-        Implemented <strong>zero-copy packet parsing</strong> by directly interpreting binary data structures without deserialization overhead.
-        Created a multi-layer protocol decoder supporting <strong>IPv4/IPv6, TCP/UDP, ICMP, and ARP</strong> with real-time display of source/destination addresses, ports, and TCP flags.
-      </p>
+      <p>Developed a low-level packet sniffer in Rust using the <strong>pnet library</strong> for raw socket access and packet manipulation. Implemented <strong>zero-copy packet parsing</strong> by directly interpreting binary data structures without deserialization overhead. Created a multi-layer protocol decoder supporting <strong>IPv4/IPv6, TCP/UDP, ICMP, and ARP</strong> with real-time display of source/destination addresses, ports, and TCP flags.</p>
 
       <span class="project-highlight">Key Systems Implementation</span>
-      <div class="code-block">
-<pre>
+      <div class="code-block"><pre>
 <span class="code-keyword">use</span> pnet::datalink;
 <span class="code-keyword">use</span> pnet::packet::ethernet::{EthernetPacket, EtherTypes};
 <span class="code-keyword">use</span> pnet::packet::tcp::{TcpPacket, TcpFlags};
@@ -404,13 +406,14 @@
         .into_iter()
         .find(|iface| iface.is_up() && !iface.is_loopback())
         .expect(<span class="code-string">"No suitable network interface found"</span>);
-    
+
     <span class="code-comment">// Create raw packet capture channel (requires root/admin privileges)</span>
     <span class="code-keyword">let</span> (_, <span class="code-keyword">mut</span> rx) = <span class="code-keyword">match</span> datalink::channel(&interface, Default::default()) {
         <span class="code-type">Ok</span>(datalink::Channel::Ethernet(tx, rx)) => (tx, rx),
         <span class="code-type">Err</span>(e) => <span class="code-macro">panic!</span>(<span class="code-string">"Failed to create datalink channel: {}"</span>, e),
+        _ => <span class="code-macro">panic!</span>(<span class="code-string">"Unexpected channel type"</span>),
     };
-    
+
     <span class="code-comment">// Zero-copy packet parsing loop</span>
     <span class="code-keyword">loop</span> {
         <span class="code-keyword">match</span> rx.next() {
@@ -419,6 +422,7 @@
                     handle_ethernet_packet(&ethernet);
                 }
             }
+            <span class="code-type">Err</span>(e) => eprintln!(<span class="code-string">"Packet capture error: {}"</span>, e),
         }
     }
 }
@@ -426,120 +430,31 @@
 <span class="code-keyword">fn</span> <span class="code-func">get_tcp_flags</span>(tcp: &TcpPacket) -> <span class="code-type">String</span> {
     <span class="code-keyword">let</span> <span class="code-keyword">mut</span> flags = <span class="code-type">Vec</span>::new();
     <span class="code-keyword">let</span> flag_bits = tcp.get_flags();
-    
+
     <span class="code-comment">// Bitwise flag extraction for TCP handshake analysis</span>
     <span class="code-keyword">if</span> flag_bits & TcpFlags::SYN != <span class="code-string">0</span> { flags.push(<span class="code-string">"SYN"</span>); }
     <span class="code-keyword">if</span> flag_bits & TcpFlags::ACK != <span class="code-string">0</span> { flags.push(<span class="code-string">"ACK"</span>); }
     <span class="code-keyword">if</span> flag_bits & TcpFlags::FIN != <span class="code-string">0</span> { flags.push(<span class="code-string">"FIN"</span>); }
-    
+    <span class="code-keyword">if</span> flag_bits & TcpFlags::RST != <span class="code-string">0</span> { flags.push(<span class="code-string">"RST"</span>); }
+
     flags.join(<span class="code-string">","</span>)
 }
-</pre>
-      </div>
+</pre></div>
 
       <p><strong>Technologies:</strong> Rust, pnet (Packet Manipulation), Raw Sockets, Binary Protocol Parsing, Systems Programming</p>
-      <p><strong>Key Features:</strong> Real-time packet capture, IPv4/IPv6 support, TCP flag analysis (SYN/ACK/FIN/RST), UDP port tracking, ARP detection, requires elevated privileges</p>
+      <p><strong>Key Features:</strong> Real-time packet capture, IPv4/IPv6 support, TCP flag analysis (SYN/ACK/FIN/RST), UDP port tracking, ARP detection — requires elevated privileges.</p>
       <a href="https://github.com/NicholasmooreWU/packet_sniffer" class="project-link" target="_blank">View on GitHub →</a>
     </div>
 
-    <div class="project">
-      <h3>GPS Interceptor - Aircraft Surveillance & Anomaly Detection System</h3>
-      
-      <span class="project-highlight">The Challenge</span>
-      <p>
-        Building a real-time aircraft tracking and threat detection system capable of monitoring live flight data, identifying impossible flight patterns (teleportation, supersonic speeds), and visualizing threats on an interactive dashboard. 
-        The system needed to integrate external APIs, persist data efficiently, detect anomalies through geospatial calculations, and provide continuous surveillance with automated refresh cycles.
-      </p>
-
-      <span class="project-highlight">The Solution</span>
-      <p>
-        Developed a full-stack surveillance platform that integrates the <strong>OpenSky Network API</strong> for real-time aircraft tracking within configurable geographic bounds.
-        Implemented <strong>SQLite database architecture</strong> with optimized schema design for storing 30-second interval flight data (position, velocity, heading, anomaly flags).
-        Built <strong>geospatial anomaly detection engine</strong> using the Haversine formula to calculate great-circle distances between consecutive positions and identify aircraft moving faster than 2000 km/h.
-        Created <strong>interactive Folium map dashboard</strong> with auto-zoom functionality, color-coded threat markers (red for anomalies, green for normal), and detailed popups displaying ICAO24 identifiers, speed, and anomaly reasons.
-        Architected <strong>orchestration loop (Sentinel)</strong> that continuously cycles through data collection → anomaly detection → visualization every 30 seconds with graceful error handling.
-      </p>
-
-      <span class="project-highlight">Key Detection Algorithm Implementation</span>
-      <div class="code-block">
-<pre>
-<span class="code-keyword">import</span> sqlite3
-<span class="code-keyword">import</span> math
-
-<span class="code-keyword">def</span> <span class="code-func">haversine</span>(lat1, lon1, lat2, lon2):
-    <span class="code-string">"""Calculate great-circle distance between two GPS coordinates (km)"""</span>
-    R = <span class="code-string">6371</span>  <span class="code-comment"># Earth radius in km</span>
-    phi1, phi2 = math.radians(lat1), math.radians(lat2)
-    dphi = math.radians(lat2 - lat1)
-    dlambda = math.radians(lon2 - lon1)
-    
-    a = math.sin(dphi/<span class="code-string">2</span>)**<span class="code-string">2</span> + math.cos(phi1)*math.cos(phi2)*math.sin(dlambda/<span class="code-string">2</span>)**<span class="code-string">2</span>
-    c = <span class="code-string">2</span> * math.atan2(math.sqrt(a), math.sqrt(<span class="code-string">1</span>-a))
-    <span class="code-keyword">return</span> R * c
-
-<span class="code-keyword">def</span> <span class="code-func">detect_anomalies</span>():
-    conn = sqlite3.connect(<span class="code-string">"surveillance_log.db"</span>)
-    cursor = conn.cursor()
-    
-    <span class="code-comment"># Fetch last 2 positions for each aircraft using Window Functions</span>
-    cursor.execute(<span class="code-string">'''
-        SELECT id, timestamp, lat, lon, velocity, icao24
-        FROM flight_data 
-        WHERE icao24 = ?
-        ORDER BY timestamp DESC LIMIT 2
-    '''</span>)
-    
-    <span class="code-keyword">for</span> aircraft <span class="code-keyword">in</span> cursor.fetchall():
-        latest, previous = aircraft[<span class="code-string">0</span>], aircraft[<span class="code-string">1</span>]
-        
-        <span class="code-comment"># Calculate implied speed from position changes</span>
-        distance_km = haversine(latest[<span class="code-string">'lat'</span>], latest[<span class="code-string">'lon'</span>], 
-                                previous[<span class="code-string">'lat'</span>], previous[<span class="code-string">'lon'</span>])
-        time_diff = latest[<span class="code-string">'timestamp'</span>] - previous[<span class="code-string">'timestamp'</span>]
-        implied_speed_kmh = (distance_km / time_diff) * <span class="code-string">3600</span>
-        
-        <span class="code-comment"># Flag teleportation: supersonic commercial aircraft (> 2000 km/h)</span>
-        <span class="code-keyword">if</span> implied_speed_kmh > <span class="code-string">2000</span>:
-            reason = <span class="code-func">f</span><span class="code-string">"TELEPORTATION: Moved {distance_km:.2f}km in {time_diff}s"</span>
-            cursor.execute(<span class="code-string">'''
-                UPDATE flight_data 
-                SET is_anomaly=1, anomaly_reason=? 
-                WHERE id=?
-            '''</span>, (reason, latest[<span class="code-string">'id'</span>]))
-    
-    conn.commit()
-    conn.close()
-</pre>
-      </div>
-
-      <span class="project-highlight">Key Features</span>
-      <ul class="feature-list">
-        <li><strong>Real-Time Data Collection:</strong> Integrated OpenSky Network REST API with configurable bounding boxes for targeted surveillance areas (London, Black Sea, etc.)</li>
-        <li><strong>Database Architecture:</strong> Designed normalized SQLite schema with indexes on frequently queried fields (icao24, timestamp) for O(log n) lookups on 10,000+ flight records</li>
-        <li><strong>Geospatial Analysis:</strong> Implemented Haversine formula for spherical distance calculations between consecutive GPS coordinates with sub-kilometer precision</li>
-        <li><strong>Anomaly Detection:</strong> Automated threat identification by comparing implied speeds (distance/time) against physical limits for commercial aircraft</li>
-        <li><strong>Interactive Dashboard:</strong> Folium map with automatic viewport fitting, color-coded markers (red=threat, green=normal), and detailed popups showing speed/status/anomaly reasons</li>
-        <li><strong>Red Team Testing:</strong> Built-in threat injection tool for testing detection capabilities (simulates teleportation from London → New York)</li>
-        <li><strong>Continuous Monitoring:</strong> Orchestration loop (Sentinel) that automatically refreshes every 30 seconds with error handling and modular architecture</li>
-        <li><strong>Standalone Executable:</strong> PyInstaller compilation for deployment without Python dependencies</li>
-      </ul>
-
-      <p><strong>Technologies:</strong> Python, OpenSky Network API, SQLite (Database Design), Folium (Geospatial Visualization), Geospatial Algorithms (Haversine), REST APIs, PyInstaller</p>
-      <p><strong>Architecture:</strong> Modular design with separate interceptor, detector, visualization, and orchestration layers. 30-second refresh cycles with graceful error handling and automatic dashboard updates.</p>
-      <a href="https://github.com/NicholasmooreWU/gps_interceptor" class="project-link" target="_blank">View on GitHub →</a>
-    </div>
-
-    <div class="project">
+    <!-- ── Project 5: Secure Image Steganography Tool ── -->
+    <div class="project" data-keywords="security cryptography python">
       <h3>Secure Image Steganography Tool</h3>
+
       <span class="project-highlight">Overview</span>
-      <p>
-        Engineered a secure Python tool utilizing <strong>ChaCha20 encryption</strong> and <strong>Least Significant Bit (LSB) encoding</strong>. 
-        The system demonstrates low-level binary data manipulation by embedding encrypted payloads directly into image pixel data, ensuring secure and hidden communication.
-      </p>
-      
+      <p>Engineered a secure Python tool utilizing <strong>ChaCha20 encryption</strong> and <strong>Least Significant Bit (LSB) encoding</strong>. The system demonstrates low-level binary data manipulation by embedding encrypted payloads directly into image pixel data, ensuring secure and hidden communication.</p>
+
       <span class="project-highlight">Key Security & Systems Implementation</span>
-      <div class="code-block">
-<pre>
+      <div class="code-block"><pre>
 <span class="code-keyword">from</span> cryptography.hazmat.primitives.ciphers <span class="code-keyword">import</span> Cipher, algorithms
 <span class="code-keyword">from</span> PIL <span class="code-keyword">import</span> Image
 
@@ -553,45 +468,144 @@
             iterations=<span class="code-string">100000</span>,
             backend=default_backend()
         )
-        
-        <span class="code-comment"># 2. Encrypt with ChaCha20 Stream Cipher</span>
-        algorithm = algorithms.ChaCha20(kdf.derive(key.encode()), nonce)
-        cipher = Cipher(algorithm, mode=<span class="code-keyword">None</span>, backend=default_backend())
-        <span class="code-keyword">return</span> cipher.encryptor().update(text.encode()) + encryptor.finalize()
+
+        <span class="code-comment"># 2. Encrypt with ChaCha20 stream cipher</span>
+        algorithm  = algorithms.ChaCha20(kdf.derive(key.encode()), nonce)
+        cipher     = Cipher(algorithm, mode=<span class="code-keyword">None</span>, backend=default_backend())
+        encryptor  = cipher.encryptor()
+        <span class="code-keyword">return</span> encryptor.update(text.encode()) + encryptor.finalize()
 
     <span class="code-keyword">def</span> <span class="code-func">alter_image</span>(<span class="code-keyword">self</span>, img, binary_message):
-        <span class="code-string">"""Embeds binary data into the LSB of each pixel's RGB channels"""</span>
-        pixels = img.load()
+        <span class="code-string">"""Embed binary data into the LSB of each pixel's RGB channels."""</span>
+        pixels     = img.load()
         width, height = img.size
-        
+        data_index = <span class="code-string">0</span>
+
         <span class="code-keyword">for</span> y <span class="code-keyword">in</span> <span class="code-func">range</span>(height):
             <span class="code-keyword">for</span> x <span class="code-keyword">in</span> <span class="code-func">range</span>(width):
                 r, g, b = pixels[x, y]
-                
-                <span class="code-comment"># Bitwise Op: Clear last bit (& ~1) and set new bit (| bit)</span>
-                <span class="code-keyword">if</span> data_index < <span class="code-func">len</span>(binary_message):
-                    r = (r & ~<span class="code-string">1</span>) | <span class="code-func">int</span>(binary_message[data_index])
-                    data_index += <span class="code-string">1</span>
-                
-                <span class="code-keyword">if</span> data_index < <span class="code-func">len</span>(binary_message):
-                    g = (g & ~<span class="code-string">1</span>) | <span class="code-func">int</span>(binary_message[data_index])
-                    data_index += <span class="code-string">1</span>
 
+                <span class="code-comment"># Bitwise op: clear LSB (& ~1) then set new bit (| bit)</span>
                 <span class="code-keyword">if</span> data_index < <span class="code-func">len</span>(binary_message):
-                    b = (b & ~<span class="code-string">1</span>) | <span class="code-func">int</span>(binary_message[data_index])
-                    data_index += <span class="code-string">1</span>
-                
+                    r = (r & ~<span class="code-string">1</span>) | <span class="code-func">int</span>(binary_message[data_index]); data_index += <span class="code-string">1</span>
+                <span class="code-keyword">if</span> data_index < <span class="code-func">len</span>(binary_message):
+                    g = (g & ~<span class="code-string">1</span>) | <span class="code-func">int</span>(binary_message[data_index]); data_index += <span class="code-string">1</span>
+                <span class="code-keyword">if</span> data_index < <span class="code-func">len</span>(binary_message):
+                    b = (b & ~<span class="code-string">1</span>) | <span class="code-func">int</span>(binary_message[data_index]); data_index += <span class="code-string">1</span>
+
                 pixels[x, y] = (r, g, b)
         <span class="code-keyword">return</span> img
-</pre>
-      </div>
+</pre></div>
 
       <p><strong>Technologies:</strong> Python, Cryptography (ChaCha20), Bitwise Operations, Pillow (PIL)</p>
-      <a href="http://github.com/NicholasmooreWU/steganography" class="project-link">View Source →</a>
+      <a href="https://github.com/NicholasmooreWU/steganography" class="project-link" target="_blank">View Source →</a>
+    </div>
+
+    <!-- ── Project 6: Simple SCM (Rust) ── -->
+    <div class="project" data-keywords="systems rust versioncontrol">
+      <h3>Simple SCM (Rust Implementation)</h3>
+
+      <span class="project-highlight">The Challenge</span>
+      <p>Building a minimal, content-addressed Version Control System (VCS) from scratch in Rust. The goal was to replicate core Git functionality — including repository initialization, staging, and commit history — using only standard libraries and cryptographic hashing for data integrity.</p>
+
+      <span class="project-highlight">The Solution</span>
+      <p>Architected <code>scm</code>, a Rust binary that manages file snapshots using a Merkle-like tree structure. Implemented <strong>SHA-256 hashing</strong> to generate unique IDs for every file blob and commit object, ensuring data integrity. Designed the system to serialize metadata into JSON and store objects on disk, enabling features like <code>commit</code>, <code>log</code>, and <code>revert</code> (rolling back to previous states).</p>
+
+      <span class="project-highlight">Key Systems Implementation</span>
+      <div class="code-block"><pre>
+<span class="code-keyword">use</span> serde::{Deserialize, Serialize};
+
+<span class="code-keyword">fn</span> <span class="code-func">commit</span>(repo: &<span class="code-type">Repo</span>, message: &<span class="code-type">str</span>) -> <span class="code-type">Result</span>&lt;(), <span class="code-type">Box</span>&lt;<span class="code-keyword">dyn</span> std::error::Error&gt;&gt; {
+    <span class="code-comment">// Snapshot all staged files into content-addressed blob objects</span>
+    <span class="code-keyword">let</span> blobs = stage_files(repo)?;
+
+    <span class="code-comment">// Build commit object: tree hash + parent hash + metadata</span>
+    <span class="code-keyword">let</span> commit_obj = CommitObject {
+        tree:    hash_tree(&blobs),
+        parent:  read_head(repo).ok(),
+        author:  get_author_config(),
+        message: message.to_string(),
+        timestamp: chrono::Utc::now().to_rfc3339(),
+    };
+
+    <span class="code-comment">// Serialize to JSON and hash for content-addressability</span>
+    <span class="code-keyword">let</span> commit_json = serde_json::to_string(&commit_obj)?;
+    <span class="code-keyword">let</span> commit_hash = sha256_hex(commit_json.as_bytes());
+
+    <span class="code-comment">// Persist object and advance HEAD</span>
+    write_object(repo, &commit_hash, commit_json.as_bytes())?;
+    write_head(repo, &commit_hash)?;
+
+    <span class="code-type">println!</span>(<span class="code-string">"Committed: {}"</span>, &commit_hash[..<span class="code-string">8</span>]);
+    <span class="code-type">Ok</span>(())
+}
+</pre></div>
+
+      <p><strong>Technologies:</strong> Rust, SHA-256 Hashing, Serde (JSON), File I/O, CLI Design</p>
+      <a href="https://github.com/NicholasmooreWU/271rs" class="project-link" target="_blank">View on GitHub →</a>
+    </div>
+
+    <!-- ── Project 7: Baseball Pitch Type Prediction ── -->
+    <div class="project" data-keywords="ml analytics r">
+      <h3>Classification Project: Baseball Pitch Type Prediction (R)</h3>
+
+      <span class="project-highlight">The Challenge</span>
+      <p>Predicting baseball pitch types using real-world Statcast data with 75+ features. The goal was to compare multiple classification algorithms (KNN, Decision Tree, Bagging, Random Forest, Boosting, Logistic Regression) and evaluate their accuracy, interpretability, and feature importance.</p>
+
+      <span class="project-highlight">The Solution</span>
+      <p>Built a full R workflow: data cleaning, feature selection, model training, and accuracy benchmarking. Used <strong>caret</strong> for cross-validation, <strong>randomForest</strong> and <strong>gbm</strong> for ensemble learning, and <strong>GGally</strong> for visualization. Expanded the feature set to improve model performance and visualized pitch locations in the strike zone.</p>
+
+      <span class="project-highlight">Key R Implementation</span>
+      <div class="code-block"><pre>
+<span class="code-comment"># Data prep and KNN model selection</span>
+library(caret)
+library(class)
+set.seed(239)
+
+trainIndex     <- createDataPartition(my_data$pitch_type, p = 0.7, list = FALSE)
+baseball_train <- my_data[ trainIndex, ]
+baseball_test  <- my_data[-trainIndex, ]
+
+baseball_train[, 1:4] <- scale(baseball_train[, 1:4])
+baseball_test[, 1:4]  <- scale(baseball_test[, 1:4])
+
+error <- rep(0, 15)
+for (i in 1:15) {
+  knn_temp <- knn(train = baseball_train[, 1:4],
+                  test  = baseball_test[, 1:4],
+                  cl    = baseball_train$pitch_type,
+                  k     = i)
+  error[i] <- 1 - mean(knn_temp == baseball_test$pitch_type)
+}
+plot(1:15, error, type = "b", col = "blue", xlab = "k", ylab = "Error Rate")
+</pre></div>
+
+      <span class="project-highlight">Results & Insights</span>
+      <ul class="feature-list">
+        <li><strong>Best KNN accuracy:</strong> 56.6% (4 features), up to 78.6% (8 features)</li>
+        <li><strong>Boosting (GBM) accuracy:</strong> 59.3% (4 features), up to 83.1% (8 features)</li>
+        <li><strong>Statcast benchmark:</strong> ~95% accuracy (MLB system)</li>
+        <li>Expanded features and boosting significantly improved model performance</li>
+        <li>Visualized pitch locations by type in the strike zone using <strong>ggplot2</strong></li>
+      </ul>
+      <p><strong>Technologies:</strong> R, caret, randomForest, gbm, GGally, dplyr, ggplot2, data visualization, model selection</p>
+      <a href="#" class="project-link" style="pointer-events:none;opacity:0.6;">R Markdown Report Available on Request</a>
+    </div>
+
+    <!-- ── Project 8: Soccer Match Predictive Analysis ── -->
+    <div class="project" data-keywords="analytics sports python">
+      <h3>Soccer Match Predictive Analysis</h3>
+
+      <span class="project-highlight">Overview</span>
+      <p>Conducted statistical analysis of ESPN soccer event data to identify Key Performance Indicators (KPIs) correlating with winning outcomes. Utilized Python and Pandas for data cleaning, exploratory data analysis (EDA), and visualization to extract actionable insights for team strategy.</p>
+
+      <p><strong>Technologies:</strong> Python, Pandas, Matplotlib, Statistical Modeling</p>
+      <a href="https://docs.google.com/presentation/d/1wKXTAAp3v-li1Y3glPJTHkFJJfPD9OHmstSC_z0AnLg/edit" class="project-link" target="_blank">View Presentation →</a>
     </div>
 
   </section>
 
+  <!-- ═══════════════════════════ CONTACT ═══════════════════════════ -->
   <section id="contact">
     <h2>Contact</h2>
     <p class="contact-info">I am actively seeking internship and entry-level opportunities in Data Analytics and Data Engineering. Please feel free to reach out!</p>
@@ -601,7 +615,30 @@
   </section>
 
   <footer>
-    <p>&copy; 2026 Nicholas Moore.</p>
+    <p>&copy; 2025 Nicholas Moore.</p>
   </footer>
+
+  <!-- Script correctly placed outside <section>, at end of <body> -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const projects   = document.querySelectorAll('.project');
+
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', function () {
+          const filter = this.getAttribute('data-filter');
+
+          filterBtns.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+
+          projects.forEach(proj => {
+            const keywords = proj.getAttribute('data-keywords') || '';
+            proj.style.display = (filter === 'all' || keywords.includes(filter)) ? '' : 'none';
+          });
+        });
+      });
+    });
+  </script>
+
 </body>
 </html>
