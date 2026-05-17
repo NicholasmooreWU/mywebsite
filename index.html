@@ -64,7 +64,6 @@
       text-align: justify;
     }
 
-    /* PROJECT STYLES */
     .project {
       margin-bottom: 2rem;
       padding: 1.5rem;
@@ -88,7 +87,6 @@
       letter-spacing: 0.5px;
     }
 
-    /* FILTER BUTTON STYLES (were missing entirely) */
     .filter-btn {
       padding: 0.4rem 1rem;
       border: 1px solid #3498db;
@@ -107,7 +105,6 @@
       color: white;
     }
 
-    /* CODE SNIPPET STYLES */
     .code-block {
       background-color: #1e1e1e;
       color: #d4d4d4;
@@ -120,7 +117,6 @@
       border: 1px solid #333;
       box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
     }
-    /* Syntax highlighting */
     .code-keyword { color: #569cd6; }
     .code-func    { color: #dcdcaa; }
     .code-comment { color: #6a9955; }
@@ -150,6 +146,25 @@
     }
     .feature-list li {
       margin-bottom: 0.4rem;
+    }
+
+    /* Results / metrics badge strip */
+    .results-strip {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 0.75rem 0 1rem;
+    }
+    .result-badge {
+      background-color: #2c3e50;
+      color: #fff;
+      border-radius: 4px;
+      padding: 0.35rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .result-badge span {
+      color: #3498db;
     }
 
     footer {
@@ -206,10 +221,11 @@
   <!-- ═══════════════════════════ ABOUT ═══════════════════════════ -->
   <section id="about-me">
     <h2>About Me</h2>
-    <p>I am a U.S. Citizen (Clearance Eligible) and a Computer Science/Data Science double major at Willamette University, graduating May 2026. I am seeking analyst roles with defense contractors or federal agencies (CIA, FBI, DoD, and others) where security, integrity, and mission impact are paramount. My background combines advanced analytics with the engineering skills to build, secure, and maintain the systems that power modern intelligence operations.</p>
+    <p>I am a U.S. Citizen (Clearance Eligible) and a Computer Science/Data Science double major at Willamette University, graduating May 2026. I am seeking analyst roles with defense contractors or federal agencies where security, integrity, and mission impact are paramount. My background combines advanced analytics with the engineering skills to build, secure, and maintain the systems that power modern intelligence operations.</p>
     <p>My technical focus includes secure database architecture, systems programming, and large-scale data analysis. I have experience with sensitive and high-volume datasets (30M+ rows), advanced SQL, and low-level tools in Rust and Python. I thrive in environments where rigorous analysis, operational security, and actionable intelligence are essential to national security and organizational success.</p>
     <div class="skills">
       <span class="skill-tag">Python (Pandas/NumPy)</span>
+      <span class="skill-tag">PyTorch / torchvision</span>
       <span class="skill-tag">Advanced SQL</span>
       <span class="skill-tag">Database Design</span>
       <span class="skill-tag">R</span>
@@ -298,52 +314,113 @@ analyzer = SentimentIntensityAnalyzer()
 <span class="code-keyword">def</span> <span class="code-func">detect_anomalies</span>():
     conn   = sqlite3.connect(<span class="code-string">"surveillance_log.db"</span>)
     cursor = conn.cursor()
-
     cursor.execute(<span class="code-string">"""
         SELECT icao24, lat, lon, timestamp
         FROM flight_data
         ORDER BY icao24, timestamp DESC
     """</span>)
-
     rows = cursor.fetchall()
     <span class="code-keyword">for</span> i <span class="code-keyword">in</span> <span class="code-func">range</span>(<span class="code-func">len</span>(rows) - <span class="code-string">1</span>):
         curr, nxt = rows[i], rows[i + <span class="code-string">1</span>]
-        <span class="code-keyword">if</span> curr[<span class="code-string">0</span>] != nxt[<span class="code-string">0</span>]:  <span class="code-comment"># different aircraft</span>
-            <span class="code-keyword">continue</span>
-
-        distance_km    = haversine(curr[<span class="code-string">1</span>], curr[<span class="code-string">2</span>], nxt[<span class="code-string">1</span>], nxt[<span class="code-string">2</span>])
-        time_diff      = curr[<span class="code-string">3</span>] - nxt[<span class="code-string">3</span>]
-        implied_kmh    = (distance_km / time_diff) * <span class="code-string">3600</span> <span class="code-keyword">if</span> time_diff > <span class="code-string">0</span> <span class="code-keyword">else</span> <span class="code-string">0</span>
-
-        <span class="code-comment"># Flag teleportation: implied speed exceeds commercial aircraft limits</span>
+        <span class="code-keyword">if</span> curr[<span class="code-string">0</span>] != nxt[<span class="code-string">0</span>]: <span class="code-keyword">continue</span>
+        distance_km = haversine(curr[<span class="code-string">1</span>], curr[<span class="code-string">2</span>], nxt[<span class="code-string">1</span>], nxt[<span class="code-string">2</span>])
+        time_diff   = curr[<span class="code-string">3</span>] - nxt[<span class="code-string">3</span>]
+        implied_kmh = (distance_km / time_diff) * <span class="code-string">3600</span> <span class="code-keyword">if</span> time_diff > <span class="code-string">0</span> <span class="code-keyword">else</span> <span class="code-string">0</span>
         <span class="code-keyword">if</span> implied_kmh > <span class="code-string">2000</span>:
             reason = <span class="code-func">f</span><span class="code-string">"TELEPORTATION: {distance_km:.2f} km in {time_diff}s"</span>
             cursor.execute(
                 <span class="code-string">"UPDATE flight_data SET is_anomaly=1, anomaly_reason=? WHERE icao24=? AND timestamp=?"</span>,
                 (reason, curr[<span class="code-string">0</span>], curr[<span class="code-string">3</span>])
             )
-
     conn.commit()
     conn.close()
 </pre></div>
 
       <span class="project-highlight">Key Features</span>
       <ul class="feature-list">
-        <li><strong>Real-Time Data Collection:</strong> Integrated OpenSky Network REST API with configurable bounding boxes for targeted surveillance areas (London, Black Sea, etc.)</li>
-        <li><strong>Database Architecture:</strong> Normalized SQLite schema with indexes on frequently queried fields (icao24, timestamp) for O(log n) lookups on 10,000+ flight records</li>
-        <li><strong>Geospatial Analysis:</strong> Haversine formula for spherical distance calculations between consecutive GPS coordinates with sub-kilometer precision</li>
-        <li><strong>Anomaly Detection:</strong> Automated threat identification by comparing implied speeds against physical limits for commercial aircraft</li>
-        <li><strong>Interactive Dashboard:</strong> Folium map with viewport auto-fit, color-coded markers (red=threat, green=normal), and detailed popups</li>
-        <li><strong>Red Team Testing:</strong> Built-in threat injection tool that simulates teleportation from London → New York to validate detection</li>
+        <li><strong>Real-Time Data Collection:</strong> Integrated OpenSky Network REST API with configurable bounding boxes for targeted surveillance areas</li>
+        <li><strong>Database Architecture:</strong> Normalized SQLite schema with indexes for O(log n) lookups on 10,000+ flight records</li>
+        <li><strong>Geospatial Analysis:</strong> Haversine formula for spherical distance calculations with sub-kilometer precision</li>
+        <li><strong>Anomaly Detection:</strong> Automated threat identification by comparing implied speeds against physical aircraft limits</li>
+        <li><strong>Red Team Testing:</strong> Built-in threat injection tool to simulate and validate detection logic</li>
         <li><strong>Continuous Monitoring:</strong> Sentinel orchestration loop refreshing every 30 seconds with graceful error handling</li>
-        <li><strong>Standalone Executable:</strong> PyInstaller compilation for deployment without Python dependencies</li>
       </ul>
 
       <p><strong>Technologies:</strong> Python, OpenSky Network API, SQLite, Folium, Haversine Algorithm, REST APIs, PyInstaller</p>
       <a href="https://github.com/NicholasmooreWU/gps_interceptor" class="project-link" target="_blank">View on GitHub →</a>
     </div>
 
-    <!-- ── Project 3: Stock Market Data Analysis Engine ── -->
+    <!-- ── Project 3: PyTorch Image Classifier (NEW) ── -->
+    <div class="project" data-keywords="ml security intelligence">
+      <h3>CNN Image Classifier — National Security Computer Vision Pipeline</h3>
+
+      <span class="project-highlight">The Challenge</span>
+      <p>Building a full computer vision pipeline from scratch — architecture design, training, evaluation, and per-class performance analysis — aligned with the image analysis workflows used in national security and radiographic inspection environments.</p>
+
+      <span class="project-highlight">The Solution</span>
+      <p>Engineered a <strong>Convolutional Neural Network (CNN)</strong> in PyTorch trained on CIFAR-10, a 10-class image dataset containing vehicles, aircraft, and animals. Built a modular pipeline separating model architecture, training loop, and evaluation — mirroring production ML system design. Implemented <strong>data augmentation</strong> (random crops, horizontal flips, color jitter) to improve generalization, <strong>learning rate scheduling</strong> to fine-tune convergence, and <strong>model checkpointing</strong> to save the best-performing weights. Produced a full per-class accuracy breakdown post-training — the kind of operational evaluation required before deploying any classification system in a mission-critical context.</p>
+
+      <span class="project-highlight">Results</span>
+      <div class="results-strip">
+        <div class="result-badge">Overall Accuracy <span>75.8%</span></div>
+        <div class="result-badge">Automobile <span>90.5%</span></div>
+        <div class="result-badge">Ship <span>88.6%</span></div>
+        <div class="result-badge">Airplane <span>78.5%</span></div>
+        <div class="result-badge">Parameters <span>1.19M</span></div>
+      </div>
+
+      <span class="project-highlight">Key Architecture Implementation</span>
+      <div class="code-block"><pre>
+<span class="code-keyword">import</span> torch.nn <span class="code-keyword">as</span> nn
+
+<span class="code-keyword">class</span> <span class="code-class">ThreatClassifierCNN</span>(nn.Module):
+    <span class="code-string">"""CNN for image classification — analogous to radiographic/sensor analysis."""</span>
+
+    <span class="code-keyword">def</span> <span class="code-func">__init__</span>(self, num_classes=<span class="code-string">10</span>):
+        <span class="code-func">super</span>().__init__()
+        self.features = nn.Sequential(
+            <span class="code-comment"># Block 1: learn edges and low-level textures</span>
+            nn.Conv2d(<span class="code-string">3</span>, <span class="code-string">32</span>, kernel_size=<span class="code-string">3</span>, padding=<span class="code-string">1</span>),
+            nn.BatchNorm2d(<span class="code-string">32</span>), nn.ReLU(inplace=<span class="code-keyword">True</span>),
+            nn.MaxPool2d(<span class="code-string">2</span>, <span class="code-string">2</span>), nn.Dropout2d(<span class="code-string">0.25</span>),
+
+            <span class="code-comment"># Block 2: learn shapes and object parts</span>
+            nn.Conv2d(<span class="code-string">32</span>, <span class="code-string">64</span>, kernel_size=<span class="code-string">3</span>, padding=<span class="code-string">1</span>),
+            nn.BatchNorm2d(<span class="code-string">64</span>), nn.ReLU(inplace=<span class="code-keyword">True</span>),
+            nn.MaxPool2d(<span class="code-string">2</span>, <span class="code-string">2</span>), nn.Dropout2d(<span class="code-string">0.25</span>),
+
+            <span class="code-comment"># Block 3: high-level abstractions (vehicle type, silhouette)</span>
+            nn.Conv2d(<span class="code-string">64</span>, <span class="code-string">128</span>, kernel_size=<span class="code-string">3</span>, padding=<span class="code-string">1</span>),
+            nn.BatchNorm2d(<span class="code-string">128</span>), nn.ReLU(inplace=<span class="code-keyword">True</span>),
+            nn.MaxPool2d(<span class="code-string">2</span>, <span class="code-string">2</span>),
+        )
+        self.classifier = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(<span class="code-string">128</span> * <span class="code-string">4</span> * <span class="code-string">4</span>, <span class="code-string">512</span>),
+            nn.ReLU(inplace=<span class="code-keyword">True</span>),
+            nn.Dropout(<span class="code-string">0.5</span>),
+            nn.Linear(<span class="code-string">512</span>, num_classes),
+        )
+
+    <span class="code-keyword">def</span> <span class="code-func">forward</span>(self, x):
+        <span class="code-keyword">return</span> self.classifier(self.features(x))
+</pre></div>
+
+      <span class="project-highlight">Key Features</span>
+      <ul class="feature-list">
+        <li><strong>Modular Architecture:</strong> Separated model, training loop, and evaluation into distinct modules — production-ready code structure</li>
+        <li><strong>Data Augmentation:</strong> Random crops, horizontal flips, and color jitter to reduce overfitting on limited data</li>
+        <li><strong>Learning Rate Scheduling:</strong> StepLR scheduler drove a jump from 70.8% → 73.2% accuracy at epoch 8</li>
+        <li><strong>Per-Class Evaluation:</strong> Identified that visually similar classes (cat/dog) account for the majority of misclassifications — critical insight for operational deployment</li>
+        <li><strong>Top-5 Confidence Scoring:</strong> Inference outputs ranked probabilities, not just a single label — enabling uncertainty-aware decisions</li>
+        <li><strong>Model Checkpointing:</strong> Best weights automatically saved across epochs for reproducible results</li>
+      </ul>
+
+      <p><strong>Technologies:</strong> Python, PyTorch, torchvision, CNN, Data Augmentation, Model Checkpointing</p>
+      <a href="https://github.com/NicholasmooreWU/cv_classifier" class="project-link" target="_blank">View on GitHub →</a>
+    </div>
+
+    <!-- ── Project 4: Stock Market Data Analysis Engine ── -->
     <div class="project" data-keywords="analytics sql bigdata">
       <h3>Stock Market Data Analysis Engine</h3>
 
@@ -384,7 +461,7 @@ returns_calc <span class="code-keyword">AS</span> (
       <a href="https://github.com/NicholasmooreWU/database-project" class="project-link" target="_blank">View on GitHub →</a>
     </div>
 
-    <!-- ── Project 4: Packet Sniffer (Rust) ── -->
+    <!-- ── Project 5: Packet Sniffer (Rust) ── -->
     <div class="project" data-keywords="systems security networking rust">
       <h3>Packet Sniffer (Rust)</h3>
 
@@ -407,14 +484,12 @@ returns_calc <span class="code-keyword">AS</span> (
         .find(|iface| iface.is_up() && !iface.is_loopback())
         .expect(<span class="code-string">"No suitable network interface found"</span>);
 
-    <span class="code-comment">// Create raw packet capture channel (requires root/admin privileges)</span>
     <span class="code-keyword">let</span> (_, <span class="code-keyword">mut</span> rx) = <span class="code-keyword">match</span> datalink::channel(&interface, Default::default()) {
         <span class="code-type">Ok</span>(datalink::Channel::Ethernet(tx, rx)) => (tx, rx),
         <span class="code-type">Err</span>(e) => <span class="code-macro">panic!</span>(<span class="code-string">"Failed to create datalink channel: {}"</span>, e),
         _ => <span class="code-macro">panic!</span>(<span class="code-string">"Unexpected channel type"</span>),
     };
 
-    <span class="code-comment">// Zero-copy packet parsing loop</span>
     <span class="code-keyword">loop</span> {
         <span class="code-keyword">match</span> rx.next() {
             <span class="code-type">Ok</span>(packet) => {
@@ -426,27 +501,13 @@ returns_calc <span class="code-keyword">AS</span> (
         }
     }
 }
-
-<span class="code-keyword">fn</span> <span class="code-func">get_tcp_flags</span>(tcp: &TcpPacket) -> <span class="code-type">String</span> {
-    <span class="code-keyword">let</span> <span class="code-keyword">mut</span> flags = <span class="code-type">Vec</span>::new();
-    <span class="code-keyword">let</span> flag_bits = tcp.get_flags();
-
-    <span class="code-comment">// Bitwise flag extraction for TCP handshake analysis</span>
-    <span class="code-keyword">if</span> flag_bits & TcpFlags::SYN != <span class="code-string">0</span> { flags.push(<span class="code-string">"SYN"</span>); }
-    <span class="code-keyword">if</span> flag_bits & TcpFlags::ACK != <span class="code-string">0</span> { flags.push(<span class="code-string">"ACK"</span>); }
-    <span class="code-keyword">if</span> flag_bits & TcpFlags::FIN != <span class="code-string">0</span> { flags.push(<span class="code-string">"FIN"</span>); }
-    <span class="code-keyword">if</span> flag_bits & TcpFlags::RST != <span class="code-string">0</span> { flags.push(<span class="code-string">"RST"</span>); }
-
-    flags.join(<span class="code-string">","</span>)
-}
 </pre></div>
 
       <p><strong>Technologies:</strong> Rust, pnet (Packet Manipulation), Raw Sockets, Binary Protocol Parsing, Systems Programming</p>
-      <p><strong>Key Features:</strong> Real-time packet capture, IPv4/IPv6 support, TCP flag analysis (SYN/ACK/FIN/RST), UDP port tracking, ARP detection — requires elevated privileges.</p>
       <a href="https://github.com/NicholasmooreWU/packet_sniffer" class="project-link" target="_blank">View on GitHub →</a>
     </div>
 
-    <!-- ── Project 5: Secure Image Steganography Tool ── -->
+    <!-- ── Project 6: Secure Image Steganography Tool ── -->
     <div class="project" data-keywords="security cryptography python">
       <h3>Secure Image Steganography Tool</h3>
 
@@ -460,39 +521,26 @@ returns_calc <span class="code-keyword">AS</span> (
 
 <span class="code-keyword">class</span> <span class="code-class">Encoder</span>:
     <span class="code-keyword">def</span> <span class="code-func">text_encoder</span>(<span class="code-keyword">self</span>, text, key):
-        <span class="code-comment"># 1. Derive strong key using PBKDF2 & SHA256</span>
-        kdf = PBKDF2HMAC(
-            algorithm=hashes.SHA256(),
-            length=<span class="code-string">32</span>,
-            salt=salt,
-            iterations=<span class="code-string">100000</span>,
-            backend=default_backend()
-        )
-
-        <span class="code-comment"># 2. Encrypt with ChaCha20 stream cipher</span>
-        algorithm  = algorithms.ChaCha20(kdf.derive(key.encode()), nonce)
-        cipher     = Cipher(algorithm, mode=<span class="code-keyword">None</span>, backend=default_backend())
-        encryptor  = cipher.encryptor()
+        kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=<span class="code-string">32</span>,
+                         salt=salt, iterations=<span class="code-string">100000</span>, backend=default_backend())
+        algorithm = algorithms.ChaCha20(kdf.derive(key.encode()), nonce)
+        cipher    = Cipher(algorithm, mode=<span class="code-keyword">None</span>, backend=default_backend())
+        encryptor = cipher.encryptor()
         <span class="code-keyword">return</span> encryptor.update(text.encode()) + encryptor.finalize()
 
     <span class="code-keyword">def</span> <span class="code-func">alter_image</span>(<span class="code-keyword">self</span>, img, binary_message):
         <span class="code-string">"""Embed binary data into the LSB of each pixel's RGB channels."""</span>
-        pixels     = img.load()
-        width, height = img.size
+        pixels = img.load()
         data_index = <span class="code-string">0</span>
-
-        <span class="code-keyword">for</span> y <span class="code-keyword">in</span> <span class="code-func">range</span>(height):
-            <span class="code-keyword">for</span> x <span class="code-keyword">in</span> <span class="code-func">range</span>(width):
+        <span class="code-keyword">for</span> y <span class="code-keyword">in</span> <span class="code-func">range</span>(img.size[<span class="code-string">1</span>]):
+            <span class="code-keyword">for</span> x <span class="code-keyword">in</span> <span class="code-func">range</span>(img.size[<span class="code-string">0</span>]):
                 r, g, b = pixels[x, y]
-
-                <span class="code-comment"># Bitwise op: clear LSB (& ~1) then set new bit (| bit)</span>
                 <span class="code-keyword">if</span> data_index < <span class="code-func">len</span>(binary_message):
                     r = (r & ~<span class="code-string">1</span>) | <span class="code-func">int</span>(binary_message[data_index]); data_index += <span class="code-string">1</span>
                 <span class="code-keyword">if</span> data_index < <span class="code-func">len</span>(binary_message):
                     g = (g & ~<span class="code-string">1</span>) | <span class="code-func">int</span>(binary_message[data_index]); data_index += <span class="code-string">1</span>
                 <span class="code-keyword">if</span> data_index < <span class="code-func">len</span>(binary_message):
                     b = (b & ~<span class="code-string">1</span>) | <span class="code-func">int</span>(binary_message[data_index]); data_index += <span class="code-string">1</span>
-
                 pixels[x, y] = (r, g, b)
         <span class="code-keyword">return</span> img
 </pre></div>
@@ -501,41 +549,31 @@ returns_calc <span class="code-keyword">AS</span> (
       <a href="https://github.com/NicholasmooreWU/steganography" class="project-link" target="_blank">View Source →</a>
     </div>
 
-    <!-- ── Project 6: Simple SCM (Rust) ── -->
+    <!-- ── Project 7: Simple SCM (Rust) ── -->
     <div class="project" data-keywords="systems rust versioncontrol">
       <h3>Simple SCM (Rust Implementation)</h3>
 
       <span class="project-highlight">The Challenge</span>
-      <p>Building a minimal, content-addressed Version Control System (VCS) from scratch in Rust. The goal was to replicate core Git functionality — including repository initialization, staging, and commit history — using only standard libraries and cryptographic hashing for data integrity.</p>
+      <p>Building a minimal, content-addressed Version Control System (VCS) from scratch in Rust, replicating core Git functionality using only standard libraries and cryptographic hashing.</p>
 
       <span class="project-highlight">The Solution</span>
-      <p>Architected <code>scm</code>, a Rust binary that manages file snapshots using a Merkle-like tree structure. Implemented <strong>SHA-256 hashing</strong> to generate unique IDs for every file blob and commit object, ensuring data integrity. Designed the system to serialize metadata into JSON and store objects on disk, enabling features like <code>commit</code>, <code>log</code>, and <code>revert</code> (rolling back to previous states).</p>
+      <p>Architected <code>scm</code>, a Rust binary managing file snapshots using a Merkle-like tree structure. Implemented <strong>SHA-256 hashing</strong> for unique content-addressed IDs on every file blob and commit object.</p>
 
       <span class="project-highlight">Key Systems Implementation</span>
       <div class="code-block"><pre>
-<span class="code-keyword">use</span> serde::{Deserialize, Serialize};
-
 <span class="code-keyword">fn</span> <span class="code-func">commit</span>(repo: &<span class="code-type">Repo</span>, message: &<span class="code-type">str</span>) -> <span class="code-type">Result</span>&lt;(), <span class="code-type">Box</span>&lt;<span class="code-keyword">dyn</span> std::error::Error&gt;&gt; {
-    <span class="code-comment">// Snapshot all staged files into content-addressed blob objects</span>
     <span class="code-keyword">let</span> blobs = stage_files(repo)?;
-
-    <span class="code-comment">// Build commit object: tree hash + parent hash + metadata</span>
     <span class="code-keyword">let</span> commit_obj = CommitObject {
-        tree:    hash_tree(&blobs),
-        parent:  read_head(repo).ok(),
-        author:  get_author_config(),
-        message: message.to_string(),
+        tree:      hash_tree(&blobs),
+        parent:    read_head(repo).ok(),
+        author:    get_author_config(),
+        message:   message.to_string(),
         timestamp: chrono::Utc::now().to_rfc3339(),
     };
-
-    <span class="code-comment">// Serialize to JSON and hash for content-addressability</span>
     <span class="code-keyword">let</span> commit_json = serde_json::to_string(&commit_obj)?;
     <span class="code-keyword">let</span> commit_hash = sha256_hex(commit_json.as_bytes());
-
-    <span class="code-comment">// Persist object and advance HEAD</span>
     write_object(repo, &commit_hash, commit_json.as_bytes())?;
     write_head(repo, &commit_hash)?;
-
     <span class="code-type">println!</span>(<span class="code-string">"Committed: {}"</span>, &commit_hash[..<span class="code-string">8</span>]);
     <span class="code-type">Ok</span>(())
 }
@@ -545,19 +583,18 @@ returns_calc <span class="code-keyword">AS</span> (
       <a href="https://github.com/NicholasmooreWU/271rs" class="project-link" target="_blank">View on GitHub →</a>
     </div>
 
-    <!-- ── Project 7: Baseball Pitch Type Prediction ── -->
+    <!-- ── Project 8: Baseball Pitch Type Prediction ── -->
     <div class="project" data-keywords="ml analytics r">
       <h3>Classification Project: Baseball Pitch Type Prediction (R)</h3>
 
       <span class="project-highlight">The Challenge</span>
-      <p>Predicting baseball pitch types using real-world Statcast data with 75+ features. The goal was to compare multiple classification algorithms (KNN, Decision Tree, Bagging, Random Forest, Boosting, Logistic Regression) and evaluate their accuracy, interpretability, and feature importance.</p>
+      <p>Predicting baseball pitch types using real-world Statcast data with 75+ features, comparing six classification algorithms to evaluate accuracy, interpretability, and feature importance.</p>
 
       <span class="project-highlight">The Solution</span>
-      <p>Built a full R workflow: data cleaning, feature selection, model training, and accuracy benchmarking. Used <strong>caret</strong> for cross-validation, <strong>randomForest</strong> and <strong>gbm</strong> for ensemble learning, and <strong>GGally</strong> for visualization. Expanded the feature set to improve model performance and visualized pitch locations in the strike zone.</p>
+      <p>Built a full R workflow: data cleaning, feature selection, model training, and accuracy benchmarking. Used <strong>caret</strong> for cross-validation, <strong>randomForest</strong> and <strong>gbm</strong> for ensemble learning, and <strong>GGally</strong> for visualization.</p>
 
       <span class="project-highlight">Key R Implementation</span>
       <div class="code-block"><pre>
-<span class="code-comment"># Data prep and KNN model selection</span>
 library(caret)
 library(class)
 set.seed(239)
@@ -566,15 +603,11 @@ trainIndex     <- createDataPartition(my_data$pitch_type, p = 0.7, list = FALSE)
 baseball_train <- my_data[ trainIndex, ]
 baseball_test  <- my_data[-trainIndex, ]
 
-baseball_train[, 1:4] <- scale(baseball_train[, 1:4])
-baseball_test[, 1:4]  <- scale(baseball_test[, 1:4])
-
 error <- rep(0, 15)
 for (i in 1:15) {
   knn_temp <- knn(train = baseball_train[, 1:4],
                   test  = baseball_test[, 1:4],
-                  cl    = baseball_train$pitch_type,
-                  k     = i)
+                  cl    = baseball_train$pitch_type, k = i)
   error[i] <- 1 - mean(knn_temp == baseball_test$pitch_type)
 }
 plot(1:15, error, type = "b", col = "blue", xlab = "k", ylab = "Error Rate")
@@ -582,17 +615,15 @@ plot(1:15, error, type = "b", col = "blue", xlab = "k", ylab = "Error Rate")
 
       <span class="project-highlight">Results & Insights</span>
       <ul class="feature-list">
-        <li><strong>Best KNN accuracy:</strong> 56.6% (4 features), up to 78.6% (8 features)</li>
-        <li><strong>Boosting (GBM) accuracy:</strong> 59.3% (4 features), up to 83.1% (8 features)</li>
-        <li><strong>Statcast benchmark:</strong> ~95% accuracy (MLB system)</li>
+        <li><strong>Best KNN accuracy:</strong> 78.6% (8 features)</li>
+        <li><strong>Boosting (GBM) accuracy:</strong> 83.1% (8 features)</li>
         <li>Expanded features and boosting significantly improved model performance</li>
-        <li>Visualized pitch locations by type in the strike zone using <strong>ggplot2</strong></li>
       </ul>
-      <p><strong>Technologies:</strong> R, caret, randomForest, gbm, GGally, dplyr, ggplot2, data visualization, model selection</p>
+      <p><strong>Technologies:</strong> R, caret, randomForest, gbm, GGally, dplyr, ggplot2</p>
       <a href="#" class="project-link" style="pointer-events:none;opacity:0.6;">R Markdown Report Available on Request</a>
     </div>
 
-    <!-- ── Project 8: Soccer Match Predictive Analysis ── -->
+    <!-- ── Project 9: Soccer Match Predictive Analysis ── -->
     <div class="project" data-keywords="analytics sports python">
       <h3>Soccer Match Predictive Analysis</h3>
 
@@ -615,10 +646,9 @@ plot(1:15, error, type = "b", col = "blue", xlab = "k", ylab = "Error Rate")
   </section>
 
   <footer>
-    <p>&copy; 2025 Nicholas Moore.</p>
+    <p>&copy; 2026 Nicholas Moore.</p>
   </footer>
 
-  <!-- Script correctly placed outside <section>, at end of <body> -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const filterBtns = document.querySelectorAll('.filter-btn');
@@ -627,10 +657,8 @@ plot(1:15, error, type = "b", col = "blue", xlab = "k", ylab = "Error Rate")
       filterBtns.forEach(btn => {
         btn.addEventListener('click', function () {
           const filter = this.getAttribute('data-filter');
-
           filterBtns.forEach(b => b.classList.remove('active'));
           this.classList.add('active');
-
           projects.forEach(proj => {
             const keywords = proj.getAttribute('data-keywords') || '';
             proj.style.display = (filter === 'all' || keywords.includes(filter)) ? '' : 'none';
