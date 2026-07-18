@@ -249,9 +249,9 @@
 <div class="project" data-keywords="intelligence analytics security">
 <h3>Automated Conflict Intelligence Monitor</h3>
 <span class="project-highlight">Overview</span>
-<p>Intelligence analysts face an overwhelming volume of unstructured open-source data (OSINT). My goal was to build an automated pipeline that ingests global news streams, extracts key enti</p>
+<p>Intelligence analysts face an overwhelming volume of unstructured open-source data (OSINT). My goal was to build an automated pipeline that ingests global news streams, extracts key entities, and scores sentiment to help surface emerging patterns in near real time.</p>
 <span class="project-highlight">Implementation</span>
-<p>I engineered an end-to-end intelligence system using <strong>Python</strong>. The system utilizes <strong>NewsAPI</strong> for automated collection, <strong>spaCy (NLP)</strong> for Name</p>
+<p>I engineered an end-to-end pipeline using <strong>Python</strong>. The system utilizes <strong>NewsAPI</strong> for automated collection, <strong>spaCy (NLP)</strong> for named entity recognition, and a sentiment scoring model, with results stored in SQLite and visualized through an interactive Streamlit dashboard and network graph.</p>
 <span class="project-highlight">Example Code</span>
 <div class="code-block"><pre>
 <span class="code-keyword">import</span> spacy
@@ -268,10 +268,12 @@ analyzer = SentimentIntensityAnalyzer()
     entities = [
         (ent.text, ent.label_)
         <span class="code-keyword">for</span> ent <span class="code-keyword">in</span> doc.ents
-        <span class="code-keyword">if</span> ent.label_ <span class="code-keyword">in</span> (<span class="code-string">"PERSON"</span>, <span class="code-string">"ORG"</span>, <span class="code- ] &lt;span class=" code-comment"=""># Sentiment score: compound ranges from -1.0 (negative) to +1.0 (positive)</span>
+        <span class="code-keyword">if</span> ent.label_ <span class="code-keyword">in</span> (<span class="code-string">"PERSON"</span>, <span class="code-string">"ORG"</span>, <span class="code-string">"GPE"</span>)
+    ]
+    <span class="code-comment"># Sentiment score: compound ranges from -1.0 (negative) to +1.0 (positive)</span>
     sentiment = analyzer.polarity_scores(article[<span class="code-string">'content'</span>])[<span class="code-string">'compound'</span>]
 
-    <span class="code-keyword">return</span> {<span class="code-string">"entities"</span>: entities, <span class="code-string">"sentiment"</span>: sentiment, <span class="code-string">"source"</span>:
+    <span class="code-keyword">return</span> {<span class="code-string">"entities"</span>: entities, <span class="code-string">"sentiment"</span>: sentiment, <span class="code-string">"source"</span>: article[<span class="code-string">'source'</span>]}
 </pre></div>
 <p><strong>Technologies:</strong> Python, NLP (spaCy), Network Graph Theory (PyVis), SQL, Streamlit, OSINT</p>
 <a class="project-link" href="https://github.com/NicholasmooreWU/automated-conflict-monitor" target="_blank">View Source →</a>
@@ -280,9 +282,9 @@ analyzer = SentimentIntensityAnalyzer()
 <div class="project" data-keywords="security analytics surveillance intelligence">
 <h3>GPS Interceptor — Aircraft Surveillance &amp; Anomaly Detection System</h3>
 <span class="project-highlight">Overview</span>
-<p>Building a real-time aircraft tracking and threat detection system capable of monitoring live flight data, identifying impossible flight patterns (teleportation, supersonic speeds), and </p>
+<p>Building a real-time aircraft tracking and anomaly detection system capable of monitoring live flight data and identifying implausible flight patterns, such as sudden position jumps or speeds beyond physical aircraft limits.</p>
 <span class="project-highlight">Implementation</span>
-<p>Developed a full-stack surveillance platform that integrates the <strong>OpenSky Network API</strong> for real-time aircraft tracking within configurable geographic bounds. Implemented &lt;</p>
+<p>Developed a full-stack tracking platform that integrates the <strong>OpenSky Network API</strong> for real-time aircraft tracking within configurable geographic bounds. Implemented a haversine-based distance calculation and a continuous monitoring loop that flags anomalous flight data for review.</p>
 <span class="project-highlight">Example Code</span>
 <div class="code-block"><pre>
 <span class="code-keyword">import</span> sqlite3
@@ -294,7 +296,8 @@ analyzer = SentimentIntensityAnalyzer()
     phi1, phi2 = math.radians(lat1), math.radians(lat2)
     dphi      = math.radians(lat2 - lat1)
     dlambda   = math.radians(lon2 - lon1)
-    a = math.sin(dphi/<span class="code-string">2</span>)**<span class="code-string">2</span> + math.cos(phi1)*math.cos(phi2)*math.sin(dlambda/<span class="code-string">2</span>)**<span class="co &lt;span class=" code-keyword"="">return</span> R * <span class="code-string">2</span> * math.atan2(math.sqrt(a), math.sqrt(<span class="code-string">1</span> - a))
+    a = math.sin(dphi/<span class="code-string">2</span>)**<span class="code-string">2</span> + math.cos(phi1)*math.cos(phi2)*math.sin(dlambda/<span class="code-string">2</span>)**<span class="code-string">2</span>
+    <span class="code-keyword">return</span> R * <span class="code-string">2</span> * math.atan2(math.sqrt(a), math.sqrt(<span class="code-string">1</span> - a))
 
 <span class="code-keyword">def</span> <span class="code-func">detect_anomalies</span>():
     conn   = sqlite3.connect(<span class="code-string">"surveillance_log.db"</span>)
@@ -305,13 +308,14 @@ analyzer = SentimentIntensityAnalyzer()
         ORDER BY icao24, timestamp DESC
     """</span>)
     rows = cursor.fetchall()
-    <span class="code-keyword">for</span> i <span class="code-keyword">in</span> <span class="code-func">range</span>(<span class="code-func">len</span>(rows) - <span class="code-string">1</span>
+    <span class="code-keyword">for</span> i <span class="code-keyword">in</span> <span class="code-func">range</span>(<span class="code-func">len</span>(rows) - <span class="code-string">1</span>):
         curr, nxt = rows[i], rows[i + <span class="code-string">1</span>]
         <span class="code-keyword">if</span> curr[<span class="code-string">0</span>] != nxt[<span class="code-string">0</span>]: <span class="code-keyword">continue</span>
-        distance_km = haversine(curr[<span class="code-string">1</span>], curr[<span class="code-string">2</span>], nxt[<span class="code-string">1</span>], nxt[<span class="code-string">2</span>
+        distance_km = haversine(curr[<span class="code-string">1</span>], curr[<span class="code-string">2</span>], nxt[<span class="code-string">1</span>], nxt[<span class="code-string">2</span>])
         time_diff   = curr[<span class="code-string">3</span>] - nxt[<span class="code-string">3</span>]
-        implied_kmh = (distance_km / time_diff) * <span class="code-string">3600</span> <span class="code-keyword">if</span> time_diff &gt; <span class="code-string">0</span> <span class="code-keywo &lt;span class=" code-keyword"="">if</span> implied_kmh &gt; <span class="code-string">2000</span>:
-            reason = <span class="code-func">f</span><span class="code-string">"TELEPORTATION: {distance_km:.2f} km in {time_diff}s"</span>
+        implied_kmh = (distance_km / time_diff) * <span class="code-string">3600</span> <span class="code-keyword">if</span> time_diff &gt; <span class="code-string">0</span> <span class="code-keyword">else</span> <span class="code-string">0</span>
+        <span class="code-keyword">if</span> implied_kmh &gt; <span class="code-string">2000</span>:
+            reason = <span class="code-func">f</span><span class="code-string">"IMPLAUSIBLE JUMP: {distance_km:.2f} km in {time_diff}s"</span>
             cursor.execute(
                 <span class="code-string">"UPDATE flight_data SET is_anomaly=1, anomaly_reason=? WHERE icao24=? AND timestamp=?"</span>,
                 (reason, curr[<span class="code-string">0</span>], curr[<span class="code-string">3</span>])
@@ -335,9 +339,9 @@ analyzer = SentimentIntensityAnalyzer()
 <div class="project" data-keywords="ml security intelligence">
 <h3>CNN Image Classifier — National Security Computer Vision Pipeline</h3>
 <span class="project-highlight">Overview</span>
-<p>Building a full computer vision pipeline from scratch — architecture design, training, evaluation, and per-class performance analysis — aligned with the image analysis workflows used</p>
+<p>Building a full computer vision pipeline from scratch — architecture design, training, evaluation, and per-class performance analysis — on a standard multi-class image dataset.</p>
 <span class="project-highlight">Implementation</span>
-<p>Engineered a <strong>Convolutional Neural Network (CNN)</strong> in PyTorch trained on CIFAR-10, a 10-class image dataset containing vehicles, aircraft, and animals. Built a modular pipe</p>
+<p>Engineered a <strong>Convolutional Neural Network (CNN)</strong> in PyTorch trained on CIFAR-10, a 10-class image dataset containing vehicles, aircraft, and animals. Built a modular pipeline separating data loading, model architecture, training, and evaluation.</p>
 <span class="project-highlight">Results</span>
 <div class="results-strip">
 <div class="result-badge">Overall Accuracy <span>75.8%</span></div>
@@ -387,7 +391,7 @@ analyzer = SentimentIntensityAnalyzer()
 <li><strong>Modular Architecture:</strong> Separated model, training loop, and evaluation into distinct modules — production-ready code structure</li>
 <li><strong>Data Augmentation:</strong> Random crops, horizontal flips, and color jitter to reduce overfitting on limited data</li>
 <li><strong>Learning Rate Scheduling:</strong> StepLR scheduler drove a jump from 70.8% → 73.2% accuracy at epoch 8</li>
-<li><strong>Per-Class Evaluation:</strong> Identified that visually similar classes (cat/dog) account for the majority of misclassifications — critical insight for operational deploymen</li>
+<li><strong>Per-Class Evaluation:</strong> Identified that visually similar classes (cat/dog) account for the majority of misclassifications — a useful insight for model improvement</li>
 <li><strong>Top-5 Confidence Scoring:</strong> Inference outputs ranked probabilities, not just a single label — enabling uncertainty-aware decisions</li>
 <li><strong>Model Checkpointing:</strong> Best weights automatically saved across epochs for reproducible results</li>
 </ul>
@@ -400,7 +404,7 @@ analyzer = SentimentIntensityAnalyzer()
 <span class="project-highlight">Overview</span>
 <p>Extracting actionable insights from a massive financial dataset containing <strong>34 million+ rows</strong> and 4,500 columns. The sheer volume of data required advanced SQL techniques </p>
 <span class="project-highlight">Implementation</span>
-<p>Developed a suite of optimized SQL queries using <strong>Common Table Expressions (CTEs)</strong> and <strong>Window Functions</strong>. Implemented <strong>database indexing strategies&lt;</strong></p>
+<p>Developed a suite of optimized SQL queries using <strong>Common Table Expressions (CTEs)</strong> and <strong>Window Functions</strong>. Implemented database indexing strategies to keep queries performant at scale, enabling volatility and returns calculations across the full historical dataset.</p>
 <span class="project-highlight">Example Code</span>
 <div class="code-block"><pre>
 <span class="code-comment">/* Optimized volatility calculation using Window Functions */</span>
@@ -409,7 +413,7 @@ analyzer = SentimentIntensityAnalyzer()
         ticker,
         trade_date,
         close_price,
-        <span class="code-func">LAG</span>(close_price) <span class="code-keyword">OVER</span> (<span class="code-keyword">PARTITION BY</span> ticker <span class="code-keyword">ORDER BY</span> tr
+        <span class="code-func">LAG</span>(close_price) <span class="code-keyword">OVER</span> (<span class="code-keyword">PARTITION BY</span> ticker <span class="code-keyword">ORDER BY</span> trade_date) <span class="code-keyword">AS</span> prev_close
     <span class="code-keyword">FROM</span> stock_prices
 ),
 returns_calc <span class="code-keyword">AS</span> (
@@ -422,7 +426,8 @@ returns_calc <span class="code-keyword">AS</span> (
 )
 <span class="code-keyword">SELECT</span>
     ticker,
-    <span class="code-func">ROUND</span>(<span class="code-func">STDDEV</span>(daily_return) * <span class="code-func">SQRT</span>(<span class="code-string">252</span>), <span class="code-string">4</span>FROM returns_calc
+    <span class="code-func">ROUND</span>(<span class="code-func">STDDEV</span>(daily_return) * <span class="code-func">SQRT</span>(<span class="code-string">252</span>), <span class="code-string">4</span>) <span class="code-keyword">AS</span> annualized_volatility
+<span class="code-keyword">FROM</span> returns_calc
 <span class="code-keyword">GROUP BY</span> ticker
 <span class="code-keyword">ORDER BY</span> annualized_volatility <span class="code-keyword">DESC</span>;
 </pre></div>
@@ -433,9 +438,9 @@ returns_calc <span class="code-keyword">AS</span> (
 <div class="project" data-keywords="systems security networking rust">
 <h3>Packet Sniffer (Rust)</h3>
 <span class="project-highlight">Overview</span>
-<p>Building a real-time network packet analyzer capable of capturing and decoding live network traffic at the data link layer. The system needed to handle raw packet capture with minimal ov</p>
+<p>Building a real-time network packet analyzer capable of capturing and decoding live network traffic at the data link layer. The system needed to handle raw packet capture with minimal overhead.</p>
 <span class="project-highlight">Implementation</span>
-<p>Developed a low-level packet sniffer in Rust using the <strong>pnet library</strong> for raw socket access and packet manipulation. Implemented <strong>zero-copy packet parsing</strong> </p>
+<p>Developed a low-level packet sniffer in Rust using the <strong>pnet library</strong> for raw socket access and packet manipulation. Implemented <strong>zero-copy packet parsing</strong> to decode Ethernet, TCP, and related headers with minimal allocation overhead.</p>
 <span class="project-highlight">Example Code</span>
 <div class="code-block"><pre>
 <span class="code-keyword">use</span> pnet::datalink;
@@ -474,7 +479,7 @@ returns_calc <span class="code-keyword">AS</span> (
 <div class="project" data-keywords="security cryptography python">
 <h3>Secure Image Steganography Tool</h3>
 <span class="project-highlight">Overview</span>
-<p>Engineered a secure Python tool utilizing <strong>ChaCha20 encryption</strong> and <strong>Least Significant Bit (LSB) encoding</strong>. The system demonstrates low-level binary data ma</p>
+<p>Engineered a Python tool utilizing <strong>ChaCha20 encryption</strong> and <strong>Least Significant Bit (LSB) encoding</strong>. The system demonstrates low-level binary data manipulation, embedding encrypted text data directly into image pixel values.</p>
 <span class="project-highlight">Example Code</span>
 <div class="code-block"><pre>
 <span class="code-keyword">from</span> cryptography.hazmat.primitives.ciphers <span class="code-keyword">import</span> Cipher, algorithms
@@ -514,10 +519,10 @@ returns_calc <span class="code-keyword">AS</span> (
 <span class="project-highlight">Overview</span>
 <p>Building a minimal, content-addressed Version Control System (VCS) from scratch in Rust, replicating core Git functionality using only standard libraries and cryptographic hashing.</p>
 <span class="project-highlight">Implementation</span>
-<p>Architected <code>scm</code>, a Rust binary managing file snapshots using a Merkle-like tree structure. Implemented <strong>SHA-256 hashing</strong> for unique content-addressed IDs on e</p>
+<p>Architected <code>scm</code>, a Rust binary managing file snapshots using a Merkle-like tree structure. Implemented <strong>SHA-256 hashing</strong> for unique content-addressed IDs on every file and commit object.</p>
 <span class="project-highlight">Example Code</span>
 <div class="code-block"><pre>
-<span class="code-keyword">fn</span> <span class="code-func">commit</span>(repo: &amp;<span class="code-type">Repo</span>, message: &amp;<span class="code-type">str</span>) -&gt; <span class="code-type">Res
+<span class="code-keyword">fn</span> <span class="code-func">commit</span>(repo: &amp;<span class="code-type">Repo</span>, message: &amp;<span class="code-type">str</span>) -&gt; <span class="code-type">Result</span>&lt;()&gt; {
     <span class="code-keyword">let</span> blobs = stage_files(repo)?;
     <span class="code-keyword">let</span> commit_obj = CommitObject {
         tree:      hash_tree(&amp;blobs),
@@ -533,7 +538,7 @@ returns_calc <span class="code-keyword">AS</span> (
     <span class="code-type">println!</span>(<span class="code-string">"Committed: {}"</span>, &amp;commit_hash[..<span class="code-string">8</span>]);
     <span class="code-type">Ok</span>(())
 }
-</span></pre></div>
+</pre></div>
 <p><strong>Technologies:</strong> Rust, SHA-256 Hashing, Serde (JSON), File I/O, CLI Design</p>
 <a class="project-link" href="https://github.com/NicholasmooreWU/271rs" target="_blank">View on GitHub →</a>
 </div>
@@ -543,7 +548,7 @@ returns_calc <span class="code-keyword">AS</span> (
 <span class="project-highlight">Overview</span>
 <p>Predicting baseball pitch types using real-world Statcast data with 75+ features, comparing six classification algorithms to evaluate accuracy, interpretability, and feature importance.</p>
 <span class="project-highlight">Implementation</span>
-<p>Built a full R workflow: data cleaning, feature selection, model training, and accuracy benchmarking. Used <strong>caret</strong> for cross-validation, <strong>randomForest</strong> and </p>
+<p>Built a full R workflow: data cleaning, feature selection, model training, and accuracy benchmarking. Used <strong>caret</strong> for cross-validation, <strong>randomForest</strong> and gradient boosting to compare model performance.</p>
 <span class="project-highlight">Key R Implementation</span>
 <div class="code-block"><pre>
 library(caret)
@@ -576,7 +581,7 @@ plot(1:15, error, type = "b", col = "blue", xlab = "k", ylab = "Error Rate")
 <div class="project" data-keywords="analytics sports python">
 <h3>Soccer Match Predictive Analysis</h3>
 <span class="project-highlight">Overview</span>
-<p>Conducted statistical analysis of ESPN soccer event data to identify Key Performance Indicators (KPIs) correlating with winning outcomes. Utilized Python and Pandas for data cleaning, ex</p>
+<p>Conducted statistical analysis of ESPN soccer event data to identify Key Performance Indicators (KPIs) correlating with winning outcomes. Utilized Python and Pandas for data cleaning, exploratory analysis, and visualization.</p>
 <p><strong>Technologies:</strong> Python, Pandas, Matplotlib, Statistical Modeling</p>
 <a class="project-link" href="https://docs.google.com/presentation/d/1wKXTAAp3v-li1Y3glPJTHkFJJfPD9OHmstSC_z0AnLg/edit" target="_blank">View Presentation →</a>
 </div>
